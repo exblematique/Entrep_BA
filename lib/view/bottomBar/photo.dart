@@ -4,7 +4,6 @@ import 'dart:async';
 //Send image to server
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 
 import 'package:camera/camera.dart';
 import 'package:path/path.dart' show join;
@@ -84,17 +83,16 @@ class PhotoPageState extends State<PhotoPage> {
                       await _controller.takePicture(path);
 
                       // If the picture was taken, display it on a new screen.
-                      Navigator.push(
+                      bool result = await Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              DisplayPictureScreen(imagePath: path),
+                              SendingPicture(imagePath: path),
                         ),
                       );
-                    } catch (e) {
-                      // If an error occurs, log the error to the console.
-                      print(e);
-                    }
+                      if (result == true) Scaffold.of(context).showSnackBar(
+                          SnackBar(content: Text('Photo envoyée ! :)')));
+                    } catch (e) {print(e);}
                   },
                 ),
             );
@@ -106,21 +104,23 @@ class PhotoPageState extends State<PhotoPage> {
     );
   }
 }
-// A widget that displays the picture taken by the user.
-class DisplayPictureScreen extends StatelessWidget {
+class SendingPicture extends StatefulWidget {
   final String imagePath;
+  SendingPicture({Key key, this.imagePath}) : super(key: key);
 
-  const DisplayPictureScreen({Key key, this.imagePath}) : super(key: key);
+  @override
+  SendingPictureState createState() => SendingPictureState();
+}
+// A widget that displays the picture taken by the user.
+class SendingPictureState extends State<SendingPicture> {
+  //To display status of sending
+  BuildContext _scaffoldContext;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Display the Picture')),
-    // The image is stored as a file on the device. Use the `Image.file`
-    // constructor with the given path to display the image.
-      body: Column(
+    Widget body = new Column(
         children: <Widget> [
-          Image.file(File(imagePath)),
+          Image.file(File(widget.imagePath)),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
@@ -130,7 +130,7 @@ class DisplayPictureScreen extends StatelessWidget {
               ),
               RaisedButton(
                 onPressed: () async {
-                  File file = File(imagePath);
+                  File file = File(widget.imagePath);
                   String phpEndPoint = 'http://minecraft.yoannchappaz.best/BA/receiveImage.php';
                   String base64Image = base64Encode(file.readAsBytesSync());
                   String fileName = file.path.split("/").last;
@@ -139,14 +139,16 @@ class DisplayPictureScreen extends StatelessWidget {
                   http.Response res = await http.post(phpEndPoint, body: {
                     "image": base64Image,
                     "name": fileName,
+                  }).catchError((e){Scaffold.of(_scaffoldContext).showSnackBar(
+                      SnackBar(content: Text('Une erreur est survenue lors de l\'envoi...\nRéessayez à nouveau')));
                   });
                   //Check result
                   if (res.statusCode == 200){
-                    //Scaffold.of(context).showSnackBar(
-                      //  SnackBar(content: Text('Photo envoyée ! :)')));
-                    Navigator.pop(context);
+                    Scaffold.of(_scaffoldContext).showSnackBar(
+                      SnackBar(content: Text('Photo envoyée ! :)')));
+                    Navigator.pop(context, true);
                   }
-                  else Scaffold.of(context).showSnackBar(
+                  else Scaffold.of(_scaffoldContext).showSnackBar(
                       SnackBar(content: Text('Erreur lors de l\'envoi...\nRéessayez à nouveau')));
                 },
                 child: Text('Envoyer'),
@@ -154,8 +156,18 @@ class DisplayPictureScreen extends StatelessWidget {
             ],
           ),
         ]
-      ),
+    );
+
+    return Scaffold(
+      appBar: AppBar(title: Text('Envoi de la Bonne Action')),
+      //key: _scaffoldKey,
+      body: new Builder(
+          builder: (BuildContext context){
+            _scaffoldContext = context;
+            return body;
+          })
     );
   }
+
 }
 
