@@ -18,7 +18,8 @@ Future<void> main() async {
   //Enable camera:
   WidgetsFlutterBinding.ensureInitialized();
   final cameras = await availableCameras();
-  runApp(MainApp(camera: cameras.first));
+  final firstCam = cameras.first;
+  runApp(MainApp(camera: firstCam));
 }
 
 class MainApp extends StatelessWidget {

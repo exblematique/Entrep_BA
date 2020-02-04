@@ -1,12 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 
-//Drawer views
-import 'package:ba_locale/view/drawer/presentaion.dart';
-import 'package:ba_locale/view/drawer/maps.dart';
-import 'package:ba_locale/view/drawer/manual.dart';
-import 'package:ba_locale/view/drawer/help.dart';
-
 //Bottom bar views
 import 'package:ba_locale/view/bottomBar/home.dart';
 import 'package:ba_locale/view/bottomBar/action.dart';
@@ -24,7 +18,7 @@ class AppPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  AppState createState() => AppState();
+  AppState createState() => AppState(camera: camera);
 }
 
 // Constant design for all pages of the program
@@ -33,7 +27,12 @@ class AppState extends State<AppPage> {
   static const Color _bgColor = Colors.blue;
   static CameraDescription _camera;
 
-  final List<Widget> _bottomViews = [
+  AppState({
+    @required CameraDescription camera
+  })
+  {_camera = camera;}
+
+  static List<Widget> _bottomViews = [
     HomePage(),
     ActionPage(),
     PhotoPage(camera: _camera),

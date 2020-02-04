@@ -2,16 +2,7 @@ import 'package:camera/camera.dart';
 import 'dart:async';
 
 //Design library
-import 'package:ba_locale/model/design.dart';
 import 'package:flutter/material.dart';
-
-//CameraDescription camera;
-/*
-Future <CameraDescription> cameraCreate() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  List<CameraDescription> cameras = await availableCameras();
-  return cameras.first;
-}*/
 
 class PhotoPage extends StatefulWidget {
   final CameraDescription camera;
@@ -46,12 +37,14 @@ class PhotoPageState extends State<PhotoPage>{
   @override
   void dispose() {
     // Dispose of the controller when the widget is disposed.
-    _controller.dispose();
+
     super.dispose();
+    _controller.dispose();
   }
 
   @override
   Widget build(BuildContext context){
+    /*
     if (!_controller.value.isInitialized) {
       return Container();
     }
@@ -59,6 +52,18 @@ class PhotoPageState extends State<PhotoPage>{
         aspectRatio:
         _controller.value.aspectRatio,
         child: CameraPreview(_controller)
+    );*/
+    return FutureBuilder<void>(
+      future: _initializeControllerFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          // If the Future is complete, display the preview.
+          return CameraPreview(_controller);
+        } else {
+          // Otherwise, display a loading indicator.
+          return Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }
