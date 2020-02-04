@@ -69,17 +69,18 @@ class LoginState extends State<Login> {
                 onPressed: () {
                   //_makeGetRequest();
                   //_makeGetRequest(context);
-                  //Navigator.pushNamed(context, '/createAccount');
+                  Navigator.pushNamed(context, '/createAccount');
                 },
                 child: Text('Créer un compte'),
               ),
-              Padding(
+              /*Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(serverResponse),
               ),
               Test("Test", serverResponse, newPage: '/createAccount',
                   key: _formKey,
                   context: context),
+               */
             ],
           ),
         ));
