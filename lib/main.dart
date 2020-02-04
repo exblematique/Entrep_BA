@@ -18,12 +18,17 @@ Future<void> main() async {
   //Enable camera:
   WidgetsFlutterBinding.ensureInitialized();
   final cameras = await availableCameras();
-  final firstCamera = cameras.first;
-
-  runApp(MainApp());
+  runApp(MainApp(camera: cameras.first));
 }
 
 class MainApp extends StatelessWidget {
+  final CameraDescription camera;
+
+  const MainApp({
+    Key key,
+    @required this.camera,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     const String appTitle = 'Bienvenue sur la BA locale !';
@@ -62,7 +67,7 @@ class MainApp extends StatelessWidget {
         routes: {
           '/': (context) => Login(),
           '/createAccount': (context) => CreateAccount(),
-          '/app': (context) => AppPage(),
+          '/app': (context) => AppPage(camera: camera),
           //Drawers routes
           '/app/presentation': (context) => Presentation(),
           '/app/maps': (context) => Maps(),
