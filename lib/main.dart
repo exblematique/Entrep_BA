@@ -42,7 +42,8 @@ class MainApp extends StatelessWidget {
         title: appTitle,
         theme: ThemeData(
           // Define the default brightness and colors.
-          brightness: Brightness.dark,
+          brightness: Brightness.light,
+//          brightness: Brightness.dark,
           /*canvasColor: _mainColor,
           scaffoldBackgroundColor: _secColor,
           primaryColor: _mainColor,

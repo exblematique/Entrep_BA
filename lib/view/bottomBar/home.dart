@@ -9,9 +9,9 @@ class HomePage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        InputDesign("Identifiant"),
-        InputDesign("Nom"),
-        InputDesign("Prénom"),
+        Image(
+            image: AssetImage('assets/img/explaination.png')
+        ),
       ],
     );
   }

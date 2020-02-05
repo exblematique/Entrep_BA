@@ -58,8 +58,9 @@ class LoginState extends State<Login> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Image(
-                image: NetworkImage(
-                    "https://flutter.dev/images/catalog-widget-placeholder.png"),
+                image: AssetImage('assets/img/logo.png'),
+                height: 200,
+                width: 200,
               ),
               InputDesign("Identifiant"),
               InputDesign("Mot de passe", password: true),
@@ -98,7 +99,7 @@ class LoginState extends State<Login> {
     });
   }*/
 }
-
+/*
 class Test extends RaisedButton {
   Test(String hintText, String test, {@required String newPage, @required key, @required context})
       : super (
@@ -117,4 +118,4 @@ class Test extends RaisedButton {
             SnackBar(content: Text('Veuillez remplir tous les champs')));
     },
   );
-}
+}*/
