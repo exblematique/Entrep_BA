@@ -1,8 +1,10 @@
 //Design Library
 //import 'dart:html';
 
+import 'package:ba_locale/controller/splash.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+
 
 // All import to define routes
 import 'package:ba_locale/view/createAccount.dart' show CreateAccount;
@@ -33,10 +35,10 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const String appTitle = 'Bienvenue sur la BA locale !';
-    const Color _mainColor = Color(0xFF263F44);
-    const Color _secColor = Color(0xFFFFF1CF);
-    const Color _terColor = Color(0xFF015668);
-    const Color _lastColor = Color(0xFFFFD369);
+//    const Color _mainColor = Color(0xFF263F44);
+//    const Color _secColor = Color(0xFFFFF1CF);
+//    const Color _terColor = Color(0xFF015668);
+//    const Color _lastColor = Color(0xFFFFD369);
 
     return MaterialApp(
         title: appTitle,
@@ -65,17 +67,17 @@ class MainApp extends StatelessWidget {
             body1: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
           ),
         ),
-        initialRoute: '/',
+        //initialRoute: '/login',
+        home: SplashPage(camera: camera),
         routes: {
-          '/': (context) => Login(),
+          '/login': (context) => Login(),
           '/createAccount': (context) => CreateAccount(),
-          '/app': (context) => AppPage(camera: camera),
+          '/app': (context) => AppPage(camera: camera, uid: ""),
           //Drawers routes
           '/app/presentation': (context) => Presentation(),
           '/app/maps': (context) => Maps(),
           '/app/manual': (context) => Manual(),
           '/app/help': (context) => Help(),
-
         });
   }
 }

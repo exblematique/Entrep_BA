@@ -12,13 +12,15 @@ import 'package:ba_locale/view/bottomBar/profile.dart';
 // The following code must be include in all children views
 class AppPage extends StatefulWidget {
   final CameraDescription camera;
+  final String uid;
   const AppPage({
     Key key,
+    @required this.uid,
     @required this.camera,
   }) : super(key: key);
 
   @override
-  AppState createState() => AppState(camera: camera);
+  AppState createState() => AppState();
 }
 
 // Constant design for all pages of the program
@@ -26,14 +28,17 @@ class AppState extends State<AppPage> {
   int _currentIndex = 0;
   static const Color _bgColor = Colors.blue;
   static CameraDescription _camera;
+  static String _uid;
 
-  AppState({
-    @required CameraDescription camera
-  })
-  {_camera = camera;}
+  @override
+  initState(){
+    _camera = widget.camera;
+    _uid = widget.uid;
+    super.initState();
+  }
 
   static List<Widget> _bottomViews = [
-    HomePage(),
+    HomePage(uid: _uid),
     ActionPage(),
     PhotoPage(camera: _camera),
     NotificationPage(),

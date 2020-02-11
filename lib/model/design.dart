@@ -1,17 +1,18 @@
 //import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 class InputDesign extends TextFormField {
-  InputDesign(String hintText, {bool password = false})
+  InputDesign(String hintText, {@required TextEditingController controller, String Function (String) validator, bool password = false})
       : super(
           //style: TextStyle(color: Color(0xFF015668)),
           textAlign: TextAlign.center,
           decoration: InputDecoration(
             hintText: hintText,
           ),
+          controller: controller,
           obscureText: password,
           validator: (value) {
+            if (validator != null) return validator(value);
             if (value.isEmpty) return "Merci d'entrer votre " + hintText;
             return null;
           },
