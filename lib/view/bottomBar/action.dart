@@ -1,6 +1,8 @@
 import 'package:ba_locale/model/design.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:path/path.dart';
 
 class ActionPage extends StatefulWidget {
   ActionPage({Key key}) : super(key: key);
@@ -8,7 +10,7 @@ class ActionPage extends StatefulWidget {
 }
 
 class _ActionPageState extends State<ActionPage> {
-  List<ActionDesign> _actions = new List<ActionDesign>();//[ActionDesign(uid: "", name: "Actions en cours de téléchargement", description: "Il y a rien à voir ici, désolé pour le temps d'attente...")];
+  List<ActionDesign> _actions = new List<ActionDesign>();
 
    //Downloading all actions
   Future<QuerySnapshot> downloadData() async {
@@ -36,7 +38,6 @@ class _ActionPageState extends State<ActionPage> {
         if (snapshot.data == null) return Text("Actions en cours de téléchargement.... Veuillez patienter....");
         createDesign(snapshot.data.documents);
         return ListView(
-          //shrinkWrap: true,
           children: _actions,
         );
       },
@@ -44,27 +45,56 @@ class _ActionPageState extends State<ActionPage> {
   }
 }
 
-class ActionDesign extends StatelessWidget{
-  final bool _isEnabled = false;
+class ActionDesign extends StatefulWidget {
   final String uid;
   final String name;
   final String description;
 
-  ActionDesign({
-    Key key,
+  ActionDesign({Key key,
     @required this.uid,
     @required this.name,
     @required this.description
   }) : super(key: key);
+  _ActionDesignState createState() => _ActionDesignState();
+}
+
+class _ActionDesignState extends State<ActionDesign>{
+  bool _isEnabled = false;
 
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        InputDesign(name),
-        _isEnabled ? InputDesign(description) : InputDesign(""),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Padding(padding: EdgeInsets.only(left: 10),
+              child: Text(widget.name,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            RaisedButton(
+              child: Icon(Icons.arrow_drop_down),
+              onPressed: (){setState(() {_isEnabled = !_isEnabled;});}
+            )
+          ]
+        ),
+        _isEnabled ? descriptionDisplay() : Divider()
       ],
     );
   }
+
+  Widget descriptionDisplay (){
+    return Column(children: <Widget>[
+        Text(widget.description),
+        Text(""),
+        RaisedButton(
+          child: Text("Participer à la bonne action"),
+          onPressed: (){}
+        ),
+        Divider()
+      ]);
+    }
 }
