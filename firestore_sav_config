@@ -1,0 +1,49 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+  	/********* Functions ****************/
+    //Check if the selected user is a admin
+  	function isAdmin(){
+        	return request.auth.uid in get(/databases/$(database)/documents/admins).data; // && user != null;
+    }
+
+    //Check if the current user is authentify
+    function isAuth() {
+            return request.auth != null;
+    }
+
+    //Check if the selected user is a current user
+    function isCurrentUser(user) {
+            return isAuth()
+             && request.auth.uid == user;
+    }
+
+    //Check if the current user belongs to company
+    function isInCompany(/*company*/){
+    	return request.auth.uid in get(/databases/$(database)/documents/companies/$(request.resource.data.company)/managers).data;
+      //return request.auth.uid in get(/databases/$(database)/documents/companies/$(company)/managers).data;
+    }
+
+    //Enabled access to user collec
+    match /users/{userId}{
+    	allow read, write: if isCurrentUser(userId) || isAdmin();
+    }
+
+    //Allow read all users for action and reduction collection
+    //Allow write only if the user belongs to the company or the user is an admin
+    match /actions/{action}{
+      allow read: if isAuth();
+      allow write: if isInCompany(/*action.company*/) || isAdmin();
+    }
+
+    match /reductions/{reduction}{
+    	allow read: if isAuth();
+      allow write: if isInCompany() || isAdmin();
+    }
+
+    //Denying collection for all users without admin
+    match /groups{
+    	allow read, write: if isAdmin();
+    }
+	}
+}

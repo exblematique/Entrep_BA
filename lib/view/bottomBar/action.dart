@@ -8,12 +8,7 @@ class ActionPage extends StatefulWidget {
 }
 
 class _ActionPageState extends State<ActionPage> {
-  List<ActionDesign> _actions = new List<ActionDesign>();
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  List<ActionDesign> _actions = new List<ActionDesign>();//[ActionDesign(uid: "", name: "Actions en cours de téléchargement", description: "Il y a rien à voir ici, désolé pour le temps d'attente...")];
 
    //Downloading all actions
   Future<QuerySnapshot> downloadData() async {
@@ -24,8 +19,7 @@ class _ActionPageState extends State<ActionPage> {
 
   //Creating all ActionDesign widget and add it to _actions
   void createDesign(List<DocumentSnapshot> actions){
-      List<ActionDesign> output = new List<ActionDesign>();
-      output.add(ActionDesign(uid: "test", name: "test", description: "test"));
+      _actions.clear();
       for (DocumentSnapshot key in actions)
         _actions.add(ActionDesign(
             uid: key.documentID,
@@ -39,6 +33,7 @@ class _ActionPageState extends State<ActionPage> {
     return FutureBuilder<QuerySnapshot>(
       future: downloadData(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+        if (snapshot.data == null) return Text("Actions en cours de téléchargement.... Veuillez patienter....");
         createDesign(snapshot.data.documents);
         return ListView(
           //shrinkWrap: true,
@@ -67,8 +62,8 @@ class ActionDesign extends StatelessWidget{
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        InputDesign("Action"),
-        _isEnabled ? InputDesign("true") : InputDesign("false"),
+        InputDesign(name),
+        _isEnabled ? InputDesign(description) : InputDesign(""),
       ],
     );
   }
