@@ -22,12 +22,16 @@ class _ActionPageState extends State<ActionPage> {
   //Creating all ActionDesign widget and add it to _actions
   void createDesign(List<DocumentSnapshot> actions){
       _actions.clear();
-      for (DocumentSnapshot key in actions)
+      bool odd = false;
+      for (DocumentSnapshot key in actions) {
         _actions.add(ActionDesign(
-            uid: key.documentID,
-            name: key.data['name'],
-            description: key.data['description']
+          uid: key.documentID,
+          name: key.data['name'],
+          description: key.data['description'],
+          color: odd ? Color(0xFFDDFFDD) : Color(0xFFCCFFCC)
         ));
+        odd = !odd;
+      }
     }
 
   @override
@@ -49,11 +53,13 @@ class ActionDesign extends StatefulWidget {
   final String uid;
   final String name;
   final String description;
+  final Color color;
 
   ActionDesign({Key key,
     @required this.uid,
     @required this.name,
-    @required this.description
+    @required this.description,
+    @required this.color
   }) : super(key: key);
   _ActionDesignState createState() => _ActionDesignState();
 }
@@ -62,28 +68,30 @@ class _ActionDesignState extends State<ActionDesign>{
   bool _isEnabled = false;
 
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Padding(padding: EdgeInsets.only(left: 10),
-              child: Text(widget.name,
-                style: TextStyle(fontWeight: FontWeight.bold),
+    return Container(
+      color: widget.color,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Padding(padding: EdgeInsets.only(left: 10),
+                child: Text(widget.name,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
-            ),
-            RaisedButton(
-              child: Icon(Icons.arrow_drop_down),
-              onPressed: (){setState(() {_isEnabled = !_isEnabled;});}
-            )
-          ]
-        ),
-        _isEnabled ? descriptionDisplay() : Divider()
-      ],
-    );
+              RaisedButton(
+                child: Icon(Icons.arrow_drop_down),
+                onPressed: (){setState(() {_isEnabled = !_isEnabled;});}
+              )
+            ]
+          ),
+          _isEnabled ? descriptionDisplay() : Divider()
+        ],
+      ));
   }
 
   Widget descriptionDisplay (){
@@ -95,6 +103,7 @@ class _ActionDesignState extends State<ActionDesign>{
           onPressed: (){}
         ),
         Divider()
-      ]);
-    }
+      ]
+    );
+  }
 }
