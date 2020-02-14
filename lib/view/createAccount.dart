@@ -14,14 +14,11 @@ class CreateAccount extends StatefulWidget {
 
 class CreateAccountState extends State<CreateAccount> {
   final _registerFormKey = GlobalKey<FormState>();
-
-
-  //static const int _nbControllers = 7;
-  TextEditingController idController, firstNameController, lastNameController, birthController, emailController, pwdController, confirmPwdController;
+  TextEditingController pseudoController, firstNameController, lastNameController, birthController, emailController, pwdController, confirmPwdController;
 
   @override
   void initState() {
-    idController = new TextEditingController();
+    pseudoController = new TextEditingController();
     firstNameController = new TextEditingController();
     lastNameController = new TextEditingController();
     birthController = new TextEditingController();
@@ -46,7 +43,7 @@ class CreateAccountState extends State<CreateAccount> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              InputDesign("Identifiant", controller: idController),
+              InputDesign("Pseudo", controller: pseudoController),
               InputDesign("Nom", controller: lastNameController),
               InputDesign("Prénom", controller: firstNameController),
               InputDesign("Date de naissance", controller: birthController),
@@ -68,14 +65,13 @@ class CreateAccountState extends State<CreateAccount> {
                         .collection("users")
                         .document(currentUser.user.uid)
                         .setData({
-                      "uid": currentUser.user.uid,
-                      "id": idController.text,
+                      "pseudo": pseudoController.text,
                       "firstName": firstNameController.text,
                       "lastName": lastNameController.text,
-                      "birthDate": birthController.text,
                       "email": emailController.text,
-                    })
-                        .then((result) => {
+                      "birthDate": birthController.text,
+                      "nbPoints": 0
+                    }).then((result) => {
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
@@ -83,16 +79,15 @@ class CreateAccountState extends State<CreateAccount> {
                                 uid: currentUser.user.uid
                               )),
                               (_) => false),
-                      idController.clear(),
+                      pseudoController.clear(),
                       firstNameController.clear(),
                       lastNameController.clear(),
                       birthController.clear(),
                       emailController.clear(),
                       pwdController.clear(),
                       confirmPwdController.clear()
-                    })
-                        .catchError((err) => print(err)))
-                        .catchError((err) => print(err));
+                    }).catchError((err) => print(err)))
+                    .catchError((err) => print(err));
                   } else {
                     showDialog(
                         context: context,

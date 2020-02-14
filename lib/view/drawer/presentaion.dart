@@ -12,7 +12,7 @@ class PresentationState extends State<Presentation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text("Création d'un compte"),
+          title: Text("Qui sommes-nous ?"),
           centerTitle: true
       ),
       body: Builder(builder: (BuildContext context) {
@@ -21,7 +21,7 @@ class PresentationState extends State<Presentation> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              InputDesign("Help"),
+              InputDesign("Help", controller: null),
             ],
           ),
         );
