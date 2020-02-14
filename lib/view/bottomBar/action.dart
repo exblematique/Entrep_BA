@@ -8,32 +8,43 @@ class ActionPage extends StatefulWidget {
 }
 
 class _ActionPageState extends State<ActionPage> {
-   List<ActionDesign> _actions = new List<ActionDesign>();
+  List<ActionDesign> _actions = new List<ActionDesign>();
 
   @override
   void initState() {
-    //Downloading all actions and created design items
-     Firestore.instance
-        .collection("actions")
-        .getDocuments()
-        .then((QuerySnapshot actions) {
-       _actions.add(ActionDesign(uid: "test", name: "test", description: "test"));
-       for (DocumentSnapshot key in actions.documents.toList())
-         _actions.add(ActionDesign(
-             uid: key.documentID,
-             name: key.data['name'],
-             description: key.data['description']
-         ));
-
-     });
     super.initState();
   }
 
+   //Downloading all actions
+  Future<QuerySnapshot> downloadData() async {
+    return await Firestore.instance
+        .collection("actions")
+        .getDocuments();
+  }
+
+  //Creating all ActionDesign widget and add it to _actions
+  void createDesign(List<DocumentSnapshot> actions){
+      List<ActionDesign> output = new List<ActionDesign>();
+      output.add(ActionDesign(uid: "test", name: "test", description: "test"));
+      for (DocumentSnapshot key in actions)
+        _actions.add(ActionDesign(
+            uid: key.documentID,
+            name: key.data['name'],
+            description: key.data['description']
+        ));
+    }
+
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      shrinkWrap: true,
-      children: _actions,
+    return FutureBuilder<QuerySnapshot>(
+      future: downloadData(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+        createDesign(snapshot.data.documents);
+        return ListView(
+          //shrinkWrap: true,
+          children: _actions,
+        );
+      },
     );
   }
 }
@@ -56,8 +67,8 @@ class ActionDesign extends StatelessWidget{
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        _isEnabled ? InputDesign("true") : InputDesign("false"),
         InputDesign("Action"),
+        _isEnabled ? InputDesign("true") : InputDesign("false"),
       ],
     );
   }
