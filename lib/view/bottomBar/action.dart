@@ -1,8 +1,6 @@
-import 'package:ba_locale/model/design.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:path/path.dart';
 
 class ActionPage extends StatefulWidget {
   ActionPage({Key key}) : super(key: key);
