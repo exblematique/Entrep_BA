@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 
 //Abstract class for reduction items
 class Reduction{
-  final String company, name, description, qrcode;
+  final String uid, company, name, description, qrcode;
   final DateTime startDate, endDate;
   final int nbPoints;
 
   Reduction({
+    @required this.uid,
     @required this.company,
     @required this.name,
     @required this.description,
@@ -27,12 +28,9 @@ abstract class Reductions{
 
   //Check if data are downloaded
   //If not, try to download and return true if successful
-  static bool waitToReady(){
-    if (!ready) {
-      downloadData();
-      while (!ready && !err)
-        continue;
-    }
+  static Future<bool> waitToReady() async {
+    if (!ready)
+      await downloadData();
     return ready && !err;
   }
 
@@ -43,7 +41,7 @@ abstract class Reductions{
   //Find element by UID
   static Reduction getElementbyUID (String uid){
     for (Reduction reduction in reductions){
-      if (reduction.name == uid)
+      if (reduction.uid == uid)
         return reduction;
     }
     return null;
@@ -63,7 +61,8 @@ abstract class Reductions{
         reductions.clear();
         for (DocumentSnapshot reduction in snapshot.documents)
           reductions.add(new Reduction(
-            company: reduction.documentID,
+            uid: reduction.documentID,
+            company: reduction.data['company'],
             name: reduction.data['name'],
             description: reduction.data['description'],
             nbPoints: reduction.data['nbPoints'],

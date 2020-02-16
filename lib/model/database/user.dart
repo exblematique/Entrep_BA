@@ -18,12 +18,9 @@ abstract class User {
 
   //Check if data are downloaded
   //If not, try to download and return true if successful
-  static bool waitToReady(){
-    if (!ready) {
-      downloadData();
-      while (!ready && !err)
-        continue;
-    }
+  static Future<bool> waitToReady() async {
+    if (!ready)
+      await downloadData();
     return ready && !err;
   }
 
@@ -38,50 +35,57 @@ abstract class User {
 
     //Downloading data
     //If success, update user value else reset all values
-    FirebaseAuth.instance
+    FirebaseUser currentUser = await FirebaseAuth.instance
       .currentUser()
-      .then((currentUser) => {
-        if (currentUser == null)
-          clear()
-        else{
-          Firestore.instance
-            .collection("users")
-            .document(currentUser.uid)
-            .get()
-            .then((DocumentSnapshot user) {
-              firstName = user['firstName'];
-              lastName = user['lastName'];
-              birthDate = user['birthDate'];
-              email = user['email'];
-              nbPoints = user['nbPoints'];
+      .catchError((e){
+        err = true;
+        print(e);
+      });
+    if (err) return;
+  //  .then((currentUser) => {
+    if (currentUser == null) {
+      clear();
+      return;
+    }
+    DocumentSnapshot user = await Firestore.instance
+      .collection("users")
+      .document(currentUser.uid)
+      .get()
+      .catchError((e){
+        err = true;
+        print(e);
+      });
+    if (err) return;
+        //.then((DocumentSnapshot user) async {
+    firstName = user.data['firstName'];
+    lastName = user.data['lastName'];
+    birthDate = user.data['birthDate'];
+    email = user.data['email'];
+    nbPoints = user.data['nbPoints'];
 
-              //Update company
-              if (user['company'] != null){
-                if (Companies.waitToReady()) {
-                  for (String company in user['company'])
-                    companies.add(Companies.getElementbyUID(company));
-                }
-                //Update reductions
-                if (user['reductionsUsed'] != null){
-                  if (Reductions.waitToReady()) {
-                    for (String reduction in user['reductions'])
-                      reductionsUsed.add(Reductions.getElementbyUID(reduction));
-                  }
-                  //Update actions
-                  if (user['actionsDone'] != null){
-                    if (Actions.waitToReady()){
-                      for (String action in user['actionsDone'].keys().toList())
-                        actionsDone[Actions.getElementbyUID(action)] = user['actionsDone'][action];
-                    } else err = true;
-                  } else err = true;
-                } else err = true;
-              }
-              ready = true;
-            })
-            .catchError((){err = true;})
-        }
-      })
-      .catchError((){err = true;});
+    //Update company
+    if (user.data['companies'] != null){
+      if (await Companies.waitToReady()) {
+        print(user.data['companies']);
+        for (String company in user.data['companies'])
+          companies.add(Companies.getElementbyUID(company));
+      } else err = true;
+    }
+    //Update reductions
+    if (user.data['reductionsUsed'] != null){
+      if (await Reductions.waitToReady()) {
+        for (String reduction in user.data['reductions'])
+          reductionsUsed.add(Reductions.getElementbyUID(reduction));
+      } else err = true;
+    }
+    //Update actions
+    if (user.data['actionsDone'] != null){
+      if (await Actions.waitToReady()){
+        for (String action in user.data['actionsDone'].keys().toList())
+          actionsDone[Actions.getElementbyUID(action)] = user.data['actionsDone'][action];
+      } else err = true;
+    }
+    if (!err) ready = true;
   }
 
   //Resetting all values

@@ -2,11 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Action{
-  final String company, name, description, qrcode;
+  final String uid, company, name, description, qrcode;
   final DateTime startDate, endDate;
   final int nbPoints;
 
   Action({
+    @required this.uid,
     @required this.company,
     @required this.name,
     @required this.description,
@@ -26,12 +27,9 @@ abstract class Actions{
 
   //Check if data are downloaded
   //If not, try to download and return true if successful
-  static bool waitToReady(){
-    if (!ready) {
-      downloadData();
-      while (!ready && !err)
-        continue;
-    }
+  static Future<bool> waitToReady() async {
+    if (!ready)
+      await downloadData();
     return ready && !err;
   }
 
@@ -42,7 +40,7 @@ abstract class Actions{
   //Find element by UID
   static Action getElementbyUID (String uid){
     for (Action action in actions){
-      if (action.name == uid)
+      if (action.uid == uid)
         return action;
     }
     return null;
@@ -62,7 +60,8 @@ abstract class Actions{
       actions.clear();
       for (DocumentSnapshot action in snapshot.documents)
         actions.add(new Action(
-          company: action.documentID,
+          uid: action.documentID,
+          company: action.data['company'],
           name: action.data['name'],
           description: action.data['description'],
           nbPoints: action.data['nbPoints'],

@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 
 //Abstract class for reduction items
 class Company{
-  final String company, name, description, qrcode;
+  final String uid, name, description, qrcode;
   final DateTime startDate, endDate;
   final int nbPoints;
 
   Company({
-    @required this.company,
+    @required this.uid,
     @required this.name,
     @required this.description,
     @required this.nbPoints,
@@ -28,19 +28,16 @@ abstract class Companies{
 
   //Check if data are downloaded
   //If not, try to download and return true if successful
-  static bool waitToReady(){
-    if (!ready) {
-      downloadData();
-      while (!ready && !err)
-        continue;
-    }
+  static Future<bool> waitToReady() async {
+    if (!ready)
+      await downloadData();
     return ready && !err;
   }
 
   //Find element by UID
   static Company getElementbyUID (String uid){
     for (Company company in companies){
-      if (company.name == uid)
+      if (company.uid == uid)
         return company;
     }
     return null;
@@ -57,24 +54,29 @@ abstract class Companies{
 
     //Downloading data
     //If success, update reductions list
-    await Firestore.instance
+    QuerySnapshot snapshot = await Firestore.instance
         .collection("companies")
         .getDocuments()
-        .then((QuerySnapshot snapshot){
-      companies.clear();
-      for (DocumentSnapshot reduction in snapshot.documents)
-        companies.add(new Company(
-          company: reduction.documentID,
-          name: reduction.data['name'],
-          description: reduction.data['description'],
-          nbPoints: reduction.data['nbPoints'],
-          startDate: reduction.data['startDate'],
-          endDate: reduction.data['endDate'],
-          qrcode: reduction.data['qrcode'],
-        ));
-      ready = true;
-    })
-        .catchError((){err = true;});
+        .catchError((e){
+          err = true;
+          print(e);
+        });
+    if (err) return;
+        //.then((QuerySnapshot snapshot){
+    companies.clear();
+    //print(snapshot.documents[0].data['name']);
+    for (DocumentSnapshot company in snapshot.documents)
+      companies.add(new Company(
+        uid: company.documentID,
+        name: company.data['name'],
+        description: company.data['description'],
+        nbPoints: company.data['nbPoints'],
+        startDate: company.data['startDate'],
+        endDate: company.data['endDate'],
+        qrcode: company.data['qrcode'],
+      ));
+    ready = true;
+    //})
   }
 }
 
