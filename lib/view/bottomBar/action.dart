@@ -85,10 +85,9 @@ class _ActionDesignState extends State<ActionDesign>{
   }
   String done = "";
   Widget descriptionDisplay (){
-
     return Column(children: <Widget>[
         Text(widget.action.description),
-        Text(done),
+        Text("Entreprise: " + widget.action.company.name),
         RaisedButton(
           child: Text("Participer à la bonne action"),
           onPressed: () async {

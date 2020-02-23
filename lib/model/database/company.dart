@@ -1,4 +1,6 @@
 
+import 'package:ba_locale/model/database/action.dart';
+import 'package:ba_locale/model/database/reduction.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -7,11 +9,16 @@ class CompanyDB{
   final String uid, name, description, qrcode;
   final DateTime startDate, endDate;
   final int nbPoints;
+  final List<ActionDB> actions;
+  final List<ReductionDB> reductions;
+
 
   CompanyDB({
     @required this.uid,
     @required this.name,
     @required this.description,
+    @required this.actions,
+    @required this.reductions,
     @required this.nbPoints,
     this.startDate,
     this.endDate,
@@ -62,19 +69,35 @@ abstract class CompaniesDB{
           print(e);
         });
     if (err) return;
-        //.then((QuerySnapshot snapshot){
     companies.clear();
-    //print(snapshot.documents[0].data['name']);
-    for (DocumentSnapshot company in snapshot.documents)
+
+    for (DocumentSnapshot company in snapshot.documents) {
+      List<ActionDB> actions = new List<ActionDB>();
+      if (company.data['actions'] != null && company.data['actions'].isNotEmpty) {
+        await ActionsDB.waitToReady();
+        for (DocumentReference action in company.data['actions'])
+          actions.add(ActionsDB.getElementbyUID(action.documentID));
+      }
+
+      List<ReductionDB> reductions = new List<ReductionDB>();
+      if (company.data['reductions'] != null && company.data['reduction'].isNotEmpty) {
+        await ReductionsDB.waitToReady();
+        for (DocumentReference reduction in company.data['reductions'])
+          reductions.add(ReductionsDB.getElementbyUID(reduction.documentID));
+      }
+
       companies.add(new CompanyDB(
         uid: company.documentID,
         name: company.data['name'],
         description: company.data['description'],
+        actions: actions,
+        reductions: reductions,
         nbPoints: company.data['nbPoints'],
         startDate: company.data['startDate'],
         endDate: company.data['endDate'],
         qrcode: company.data['qrcode'],
       ));
+    }
     ready = true;
     //})
   }

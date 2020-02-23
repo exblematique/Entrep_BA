@@ -81,8 +81,14 @@ class LoginState extends State<Login> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    SplashPage()))
-                            .catchError((err) => print(err));
+                                    SplashPage()
+                            )
+                          ).catchError((err) {
+                              print(err);
+                              Scaffold.of(context).showSnackBar(
+                                  SnackBar(content: Text("Erreur " + err.toString()))
+                              );
+                            });
                         });
                 },
               ),

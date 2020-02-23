@@ -1,5 +1,3 @@
-//import 'dart:html';
-
 import 'package:ba_locale/controller/splash.dart';
 import 'package:ba_locale/model/validators.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

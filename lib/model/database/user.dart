@@ -57,7 +57,6 @@ abstract class UserDB {
         print(e);
       });
     if (err) return;
-        //.then((DocumentSnapshot user) async {
     firstName = user.data['firstName'];
     lastName = user.data['lastName'];
     birthDate = user.data['birthDate'];
@@ -67,9 +66,8 @@ abstract class UserDB {
     //Update company
     if (user.data['companies'] != null){
       if (await CompaniesDB.waitToReady()) {
-        print(user.data['companies']);
-        for (String company in user.data['companies'])
-          companies.add(CompaniesDB.getElementbyUID(company));
+         for (DocumentReference company in user.data['companies'])
+          companies.add(CompaniesDB.getElementbyUID(company.documentID));
       } else err = true;
     }
     //Update reductions

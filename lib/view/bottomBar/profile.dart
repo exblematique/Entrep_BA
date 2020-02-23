@@ -1,5 +1,6 @@
 import 'package:ba_locale/model/database/company.dart';
 import 'package:ba_locale/model/database/user.dart';
+import 'package:ba_locale/view/bottomBar/subView/ManageAction.dart';
 //import 'package:ba_locale/model/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:ba_locale/model/design.dart';
@@ -68,7 +69,8 @@ class CompanyDesign extends StatelessWidget{
     output.add(RaisedButton(
         child: Text("Gérer les actions"),
         onPressed: (){
-
+          Navigator.push(context, MaterialPageRoute(
+              builder: (BuildContext context) => ManageActionPage(company: this.company)));
         })
     );
     output.add(RaisedButton(

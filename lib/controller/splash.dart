@@ -13,6 +13,7 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   @override
   initState() {
+    UserDB.clear();
     FirebaseAuth.instance
       .currentUser()
       .then((currentUser) {

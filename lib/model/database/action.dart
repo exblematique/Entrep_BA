@@ -1,8 +1,10 @@
+import 'package:ba_locale/model/database/company.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ActionDB{
-  final String uid, company, name, description, qrcode;
+  final CompanyDB company;
+  final String uid, name, description, qrcode;
   final DateTime startDate, endDate;
   final int nbPoints;
 
@@ -23,6 +25,8 @@ class ActionDB{
     else
       return false;
   }
+
+  Future<bool> delete() async => ActionsDB.deleteItem(this);
 }
 
 //Abstract class with all pieces of information on reduction
@@ -65,10 +69,10 @@ abstract class ActionsDB{
       .getDocuments()
       .then((QuerySnapshot snapshot){
         availableList.clear();
-        for (DocumentSnapshot action in snapshot.documents)
+        for (DocumentSnapshot action in snapshot.documents) {
           availableList.add(new ActionDB(
             uid: action.documentID,
-            company: action.data['company'],
+            company: CompaniesDB.getElementbyUID(action.data['company'].documentID),
             name: action.data['name'],
             description: action.data['description'],
             nbPoints: action.data['nbPoints'],
@@ -76,8 +80,28 @@ abstract class ActionsDB{
             endDate: action.data['endDate'],
             qrcode: action.data['qrcode'],
           ));
+        }
         ready = true;
     })
     .catchError((_){err = true;});
+  }
+
+  static Future<bool> deleteItem(ActionDB action) async {
+    bool error = false;
+    await Firestore.instance
+      .collection("actions")
+      .document(action.uid)
+      .delete()
+//TODO remove reference
+//    .then((_) async {
+//        await Firestore.instance
+//          .collection("companies")
+//          .document(action.company.uid)
+//          .updateData({})
+//        availableList.remove(action);
+//
+//      })
+      .catchError((_) => error = true);
+    return !error;
   }
 }
