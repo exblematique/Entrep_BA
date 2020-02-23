@@ -1,9 +1,8 @@
 //All widgets (generic and custom)
+import 'package:ba_locale/controller/splash.dart';
 import 'package:ba_locale/model/validators.dart';
-import 'package:ba_locale/view/bottomBar/home.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ba_locale/model/design.dart';
 
 class LoginApp extends Login {
@@ -70,29 +69,21 @@ class LoginState extends State<Login> {
               RaisedButton(
                 child: Text("Login"),
                 //color: Theme.of(context).primaryColor,
-                textColor: Colors.white,
+                //textColor: Colors.white,
                 onPressed: () {
-                  if (_loginFormKey.currentState.validate()) {
+                  if (_loginFormKey.currentState.validate())
                     FirebaseAuth.instance
                         .signInWithEmailAndPassword(
                         email: emailController.text,
                         password: pwdController.text)
-                        .then((currentUser) =>
-                        Firestore.instance
-                            .collection("users")
-                            .document(currentUser.user.uid)
-                            .get()
-                            .then((DocumentSnapshot result) =>
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        HomePage(
-                                          uid: currentUser.user.uid,
-                                        ))))
-                            .catchError((err) => print(err)))
-                        .catchError((err) => print(err));
-                  }
+                        .then((currentUser) {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    SplashPage()))
+                            .catchError((err) => print(err));
+                        });
                 },
               ),
               RaisedButton(

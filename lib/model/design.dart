@@ -1,13 +1,27 @@
 //import 'dart:ui';
 import 'package:flutter/material.dart';
 
+abstract class ThemeDesign {
+  static Color mainColor = const Color(0xFF00A896);
+  static Color mainTxtColor = const Color(0xFFFFFFFF);
+
+  static Color secColor = const Color(0xFF02C39A);
+  static Color secTxtColor = const Color(0xFFFFFFFF);
+
+  static Color backgroundColor = const Color(0xFFFFFFFF);
+
+  static Color interfaceColor = const Color(0xFF018C82);
+  static Color interfaceTxtColor = const Color(0xFFFFFFFF);
+}
+
 class InputDesign extends TextFormField {
   InputDesign(String hintText, {@required TextEditingController controller, String Function (String) validator, bool password = false})
       : super(
-          //style: TextStyle(color: Color(0xFF015668)),
+          style: TextStyle(color: ThemeDesign.interfaceColor),
           textAlign: TextAlign.center,
           decoration: InputDecoration(
             hintText: hintText,
+            hintStyle: TextStyle(color: ThemeDesign.interfaceColor)
           ),
           controller: controller,
           obscureText: password,
@@ -33,20 +47,12 @@ class ChangePageDesign extends RaisedButton {
   );
 }
 
-
-
-class Choice {
-  const Choice({this.title, this.icon});
-
-  final String title;
-  final IconData icon;
+class TextInterfaceDesign extends Text{
+  TextInterfaceDesign (String text, {double size})
+    : super (
+      text,
+      style: TextStyle(
+        color: ThemeDesign.interfaceTxtColor,
+        fontSize: size,
+      ));
 }
-
-const List<Choice> choices = const <Choice>[
-  const Choice(title: 'Car', icon: Icons.directions_car),
-  const Choice(title: 'Bicycle', icon: Icons.directions_bike),
-  const Choice(title: 'Boat', icon: Icons.directions_boat),
-  const Choice(title: 'Bus', icon: Icons.directions_bus),
-  const Choice(title: 'Train', icon: Icons.directions_railway),
-  const Choice(title: 'Walk', icon: Icons.directions_walk),
-];

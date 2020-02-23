@@ -4,7 +4,7 @@ import 'package:ba_locale/model/database/reduction.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-abstract class User {
+abstract class UserDB {
   //This variable equal true when all data are downloaded
   static bool ready = false;
   static bool err = false;
@@ -12,9 +12,9 @@ abstract class User {
   //Generic pieces of information
   static String firstName, lastName, birthDate, email;
   static int nbPoints;
-  static List<Company> companies = new List<Company>();
-  static List<Reduction> reductionsUsed = new List<Reduction>();
-  static Map<Action, bool> actionsDone;
+  static List<CompanyDB> companies = new List<CompanyDB>();
+  static List<ReductionDB> reductionsUsed = new List<ReductionDB>();
+  static Map<ActionDB, bool> actionsDone = new Map<ActionDB, bool>();
 
   //Check if data are downloaded
   //If not, try to download and return true if successful
@@ -44,7 +44,8 @@ abstract class User {
     if (err) return;
   //  .then((currentUser) => {
     if (currentUser == null) {
-      clear();
+      UserDB.clear();
+      err = true;
       return;
     }
     DocumentSnapshot user = await Firestore.instance
@@ -65,24 +66,24 @@ abstract class User {
 
     //Update company
     if (user.data['companies'] != null){
-      if (await Companies.waitToReady()) {
+      if (await CompaniesDB.waitToReady()) {
         print(user.data['companies']);
         for (String company in user.data['companies'])
-          companies.add(Companies.getElementbyUID(company));
+          companies.add(CompaniesDB.getElementbyUID(company));
       } else err = true;
     }
     //Update reductions
     if (user.data['reductionsUsed'] != null){
-      if (await Reductions.waitToReady()) {
+      if (await ReductionsDB.waitToReady()) {
         for (String reduction in user.data['reductions'])
-          reductionsUsed.add(Reductions.getElementbyUID(reduction));
+          reductionsUsed.add(ReductionsDB.getElementbyUID(reduction));
       } else err = true;
     }
     //Update actions
     if (user.data['actionsDone'] != null){
-      if (await Actions.waitToReady()){
+      if (await ActionsDB.waitToReady()){
         for (String action in user.data['actionsDone'].keys().toList())
-          actionsDone[Actions.getElementbyUID(action)] = user.data['actionsDone'][action];
+          actionsDone[ActionsDB.getElementbyUID(action)] = user.data['actionsDone'][action];
       } else err = true;
     }
     if (!err) ready = true;
@@ -90,6 +91,8 @@ abstract class User {
 
   //Resetting all values
   static void clear(){
+    ready = false;
+    err = false;
     firstName = null;
     lastName = null;
     birthDate = null;
@@ -98,5 +101,19 @@ abstract class User {
     companies.clear();
     reductionsUsed.clear();
     actionsDone.clear();
+  }
+
+  static Map<String, String> getAlterable() {
+    Map <String, String> output = new Map<String, String>();
+    output["Nom"] = lastName;
+    output["Prénom"] = firstName;
+    output["Date de naissance"] = birthDate;
+    output["Adresse mail"] = email;
+    return output;
+  }
+
+  static Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut()
+        .then((_) => clear());
   }
 }

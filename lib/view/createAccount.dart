@@ -1,7 +1,7 @@
 //import 'dart:html';
 
+import 'package:ba_locale/controller/splash.dart';
 import 'package:ba_locale/model/validators.dart';
-import 'package:ba_locale/view/bottomBar/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -75,9 +75,7 @@ class CreateAccountState extends State<CreateAccount> {
                       Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => HomePage(
-                                uid: currentUser.user.uid
-                              )),
+                            builder: (context) => SplashPage()),
                               (_) => false),
                       pseudoController.clear(),
                       firstNameController.clear(),

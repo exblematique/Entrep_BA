@@ -1,3 +1,4 @@
+import 'package:ba_locale/model/database/company.dart';
 import 'package:ba_locale/model/database/user.dart';
 //import 'package:ba_locale/model/validators.dart';
 import 'package:flutter/material.dart';
@@ -9,90 +10,73 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  Map<String, String> parameterList = UserDB.getAlterable();
+  Map<String, TextEditingController> controllers = new Map<String, TextEditingController>();
 
-  //Creating all ActionDesign widget and add it to _actions
+  //Creating all ActionDesign widget and return this
   List<Widget> createDesign() {
-    List<Widget> output = <Widget>[
-      InputDesign(User.firstName, validator: null, controller: null),
-      InputDesign(User.lastName, validator: null, controller: null),
-      InputDesign(User.birthDate, validator: null, controller: null),
-      InputDesign(User.email, validator: null, controller: null),
-      InputDesign(User.nbPoints.toString(), validator: null, controller: null)
-    ];
-    if (User.companies.length > 0)
-      output.add(InputDesign(User.companies[0].name, validator: null, controller: null));
+    List<Widget> output = new List<Widget>();
+    for (String param in parameterList.keys.toList()) {
+      controllers[param] = new TextEditingController(text: parameterList[param]);
+      output.add(ProfileDesign(parameter: param, controller: controllers[param]));
+    }
+    for (int i=0; i<UserDB.companies.length; i++)
+      output.add(CompanyDesign(UserDB.companies[i]));
     return output;
   }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<bool>(
-      future: User.waitToReady(),
+      future: UserDB.waitToReady(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
         if (snapshot.data == null) return Text("Profil de l'utilisateur en cours de téléchargement.... Veuillez patienter....");
         return ListView(
-          children: snapshot.data ? createDesign() : <Widget>[Text("Il y a une erreur pendant le chargement des informations.... Réessayer plus tard !")],
+          children: snapshot.data ? createDesign() : <Widget>[Text("Il y a une erreur pendant le chargement des informations.... Réessayer plus tard !")]
         );
       },
     );
   }
 }
-//
-//class ActionDesign extends StatefulWidget {
-//  final String uid;
-//  final String name;
-//  final String description;
-//  final Color color;
-//
-//  ActionDesign({Key key,
-//    @required this.uid,
-//    @required this.name,
-//    @required this.description,
-//    @required this.color
-//  }) : super(key: key);
-//  _ActionDesignState createState() => _ActionDesignState();
-//}
-//
-//class _ActionDesignState extends State<ActionDesign>{
-//  bool _isEnabled = false;
-//
-//  Widget build(BuildContext context) {
-//    return Container(
-//        color: widget.color,
-//        child: Column(
-//          mainAxisAlignment: MainAxisAlignment.center,
-//          crossAxisAlignment: CrossAxisAlignment.center,
-//          children: <Widget>[
-//            Row(
-//                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                crossAxisAlignment: CrossAxisAlignment.center,
-//                children: <Widget>[
-//                  Padding(padding: EdgeInsets.only(left: 10),
-//                    child: Text(widget.name,
-//                      style: TextStyle(fontWeight: FontWeight.bold),
-//                    ),
-//                  ),
-//                  RaisedButton(
-//                      child: Icon(Icons.arrow_drop_down),
-//                      onPressed: (){setState(() {_isEnabled = !_isEnabled;});}
-//                  )
-//                ]
-//            ),
-//            _isEnabled ? descriptionDisplay() : Divider()
-//          ],
-//        ));
-//  }
-//
-//  Widget descriptionDisplay (){
-//    return Column(children: <Widget>[
-//      Text(widget.description),
-//      Text(""),
-//      RaisedButton(
-//          child: Text("Participer à la bonne action"),
-//          onPressed: (){}
-//      ),
-//      Divider()
-//    ]
-//    );
-//  }
-//}
+
+class ProfileDesign extends StatelessWidget{
+  final String parameter;
+  final TextEditingController controller;
+
+  ProfileDesign({
+    Key key,
+    @required this.parameter,
+    @required this.controller
+  }) : super(key: key);
+
+  Widget build(BuildContext context){
+    List<Widget> output = new List<Widget>();
+    output.add(Text(this.parameter));
+    output.add(InputDesign(this.parameter, controller: controller));
+    return Column(children: output);
+  }
+}
+
+class CompanyDesign extends StatelessWidget{
+  final CompanyDB company;
+
+  CompanyDesign(this.company, {Key key}) : super(key: key);
+
+  Widget build(BuildContext context){
+    List<Widget> output = new List<Widget>();
+    output.add(Text(this.company.name));
+    output.add(RaisedButton(
+        child: Text("Gérer les actions"),
+        onPressed: (){
+
+        })
+    );
+    output.add(RaisedButton(
+        child: Text("Gérer les réductions"),
+        onPressed: (){
+
+        })
+    );
+    return Column(children: output);
+  }
+}

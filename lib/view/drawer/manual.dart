@@ -21,7 +21,7 @@ class ManualState extends State<Manual> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              InputDesign("Manual"),
+              InputDesign("Manual", controller: null),
             ],
           ),
         );

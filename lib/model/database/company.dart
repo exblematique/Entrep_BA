@@ -3,12 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 //Abstract class for reduction items
-class Company{
+class CompanyDB{
   final String uid, name, description, qrcode;
   final DateTime startDate, endDate;
   final int nbPoints;
 
-  Company({
+  CompanyDB({
     @required this.uid,
     @required this.name,
     @required this.description,
@@ -20,11 +20,11 @@ class Company{
 }
 
 //Abstract class with all pieces of information on reduction
-abstract class Companies{
+abstract class CompaniesDB{
   //This variable equal true when all data are downloaded
   static bool ready = false;
   static bool err =  false;
-  static List<Company> companies = new List<Company>();
+  static List<CompanyDB> companies = new List<CompanyDB>();
 
   //Check if data are downloaded
   //If not, try to download and return true if successful
@@ -35,8 +35,8 @@ abstract class Companies{
   }
 
   //Find element by UID
-  static Company getElementbyUID (String uid){
-    for (Company company in companies){
+  static CompanyDB getElementbyUID (String uid){
+    for (CompanyDB company in companies){
       if (company.uid == uid)
         return company;
     }
@@ -66,7 +66,7 @@ abstract class Companies{
     companies.clear();
     //print(snapshot.documents[0].data['name']);
     for (DocumentSnapshot company in snapshot.documents)
-      companies.add(new Company(
+      companies.add(new CompanyDB(
         uid: company.documentID,
         name: company.data['name'],
         description: company.data['description'],

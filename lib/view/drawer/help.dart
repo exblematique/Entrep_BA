@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ba_locale/model/design.dart';
 
-class Help extends StatefulWidget {
+class HelpPage extends StatefulWidget {
   @override
-  HelpState createState() => HelpState();
+  HelpPageState createState() => HelpPageState();
 }
 
-class HelpState extends State<Help> {
+class HelpPageState extends State<HelpPage> {
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class HelpState extends State<Help> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              InputDesign("Help"),
+              InputDesign("Help", controller: null),
             ],
           ),
         );

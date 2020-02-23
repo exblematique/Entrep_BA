@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-//Abstract class for reduction items
-class Reduction{
+class ReductionDB{
   final String uid, company, name, description, qrcode;
   final DateTime startDate, endDate;
   final int nbPoints;
 
-  Reduction({
+  ReductionDB({
     @required this.uid,
     @required this.company,
     @required this.name,
@@ -17,14 +16,21 @@ class Reduction{
     this.endDate,
     this.qrcode,
   });
+
+  bool validate(String qrcode) {
+    if (qrcode == this.qrcode)
+      return true;
+    else
+      return false;
+  }
 }
 
 //Abstract class with all pieces of information on reduction
-abstract class Reductions{
+abstract class ReductionsDB{
   //This variable equal true when all data are downloaded
   static bool ready = false;
   static bool err =  false;
-  static List<Reduction> reductions = new List<Reduction>();
+  static List<ReductionDB> availableList = new List<ReductionDB>();
 
   //Check if data are downloaded
   //If not, try to download and return true if successful
@@ -39,10 +45,10 @@ abstract class Reductions{
   }
 
   //Find element by UID
-  static Reduction getElementbyUID (String uid){
-    for (Reduction reduction in reductions){
-      if (reduction.uid == uid)
-        return reduction;
+  static ReductionDB getElementbyUID (String uid){
+    for (ReductionDB action in availableList){
+      if (action.uid == uid)
+        return action;
     }
     return null;
   }
@@ -55,25 +61,22 @@ abstract class Reductions{
     //Downloading data
     //If success, update reductions list
     await Firestore.instance
-      .collection("reductions")
-      .getDocuments()
-      .then((QuerySnapshot snapshot){
-        reductions.clear();
-        for (DocumentSnapshot reduction in snapshot.documents)
-          reductions.add(new Reduction(
-            uid: reduction.documentID,
-            company: reduction.data['company'],
-            name: reduction.data['name'],
-            description: reduction.data['description'],
-            nbPoints: reduction.data['nbPoints'],
-            startDate: reduction.data['startDate'],
-            endDate: reduction.data['endDate'],
-            qrcode: reduction.data['qrcode'],
-          ));
-        ready = true;
-      })
-      .catchError((){err = true;});
+        .collection("reductions")
+        .getDocuments()
+        .then((QuerySnapshot snapshot){
+      availableList.clear();
+      for (DocumentSnapshot action in snapshot.documents)
+        availableList.add(new ReductionDB(
+          uid: action.documentID,
+          company: action.data['company'],
+          name: action.data['name'],
+          description: action.data['description'],
+          nbPoints: action.data['nbPoints'],
+          startDate: action.data['startDate'],
+          endDate: action.data['endDate'],
+          qrcode: action.data['qrcode'],
+        ));
+      ready = true;
+    }).catchError((_){err = true;});
   }
 }
-
-

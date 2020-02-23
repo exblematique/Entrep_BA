@@ -1,6 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:ba_locale/model/database/action.dart';
+import 'package:ba_locale/model/design.dart';
+import 'package:ba_locale/view/photo/photo.dart';
+import 'package:ba_locale/view/photo/qrcode.dart';
+import 'package:flutter/material.dart' show AsyncSnapshot, BuildContext, Color, Column, Container, CrossAxisAlignment, EdgeInsets, FontWeight, FutureBuilder, Icon, Icons, Key, ListView, MainAxisAlignment, MaterialPageRoute, Navigator, Padding, RaisedButton, Row, State, StatefulWidget, Text, TextStyle, Widget, required;
 
 class ActionPage extends StatefulWidget {
   ActionPage({Key key}) : super(key: key);
@@ -8,57 +10,47 @@ class ActionPage extends StatefulWidget {
 }
 
 class _ActionPageState extends State<ActionPage> {
-  List<ActionDesign> _actions = new List<ActionDesign>();
-
-   //Downloading all actions
-  Future<QuerySnapshot> downloadData() async {
-    return await Firestore.instance
-        .collection("actions")
-        .getDocuments();
-  }
-
-  //Creating all ActionDesign widget and add it to _actions
-  void createDesign(List<DocumentSnapshot> actions){
-      _actions.clear();
-      bool odd = false;
-      for (DocumentSnapshot key in actions) {
-        _actions.add(ActionDesign(
-          uid: key.documentID,
-          name: key.data['name'],
-          description: key.data['description'],
-          color: odd ? Color(0xFFDDFFDD) : Color(0xFFCCFFCC)
-        ));
-        odd = !odd;
-      }
+  bool takePicture = false;
+  //Creating all ActionDesign widget and return this
+  List<ActionDesign> createDesign() {
+    List<ActionDesign> output = new List<ActionDesign>();
+    bool odd = false;
+    for (ActionDB action in ActionsDB.availableList) {
+      output.add(ActionDesign(
+          action: action,
+          color: odd ? ThemeDesign.mainColor : ThemeDesign.secColor
+      ));
+      odd = !odd;
     }
+    return output;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<QuerySnapshot>(
-      future: downloadData(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
-        if (snapshot.data == null) return Text("Actions en cours de téléchargement.... Veuillez patienter....");
-        createDesign(snapshot.data.documents);
-        return ListView(
-          children: _actions,
-        );
+    return FutureBuilder<bool>(
+      future: ActionsDB.waitToReady(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
+        if (snapshot.hasData)
+          return ListView(children: createDesign());
+        if (snapshot.hasError)
+          return Text('Il y a une erreur : ${snapshot.error}');
+        else
+          return Text("Actions en cours de téléchargement.... Veuillez patienter....");
+
       },
     );
   }
 }
 
 class ActionDesign extends StatefulWidget {
-  final String uid;
-  final String name;
-  final String description;
+  final ActionDB action;
   final Color color;
 
   ActionDesign({Key key,
-    @required this.uid,
-    @required this.name,
-    @required this.description,
+    @required this.action,
     @required this.color
   }) : super(key: key);
+
   _ActionDesignState createState() => _ActionDesignState();
 }
 
@@ -77,30 +69,48 @@ class _ActionDesignState extends State<ActionDesign>{
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Padding(padding: EdgeInsets.only(left: 10),
-                child: Text(widget.name,
+                child: Text(widget.action.name,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
               RaisedButton(
                 child: Icon(Icons.arrow_drop_down),
-                onPressed: (){setState(() {_isEnabled = !_isEnabled;});}
+                onPressed: () => setState(() => _isEnabled = !_isEnabled)
               )
             ]
           ),
-          _isEnabled ? descriptionDisplay() : Divider()
+          _isEnabled ? descriptionDisplay() : Text("")
         ],
       ));
   }
-
+  String done = "";
   Widget descriptionDisplay (){
+
     return Column(children: <Widget>[
-        Text(widget.description),
-        Text(""),
+        Text(widget.action.description),
+        Text(done),
         RaisedButton(
           child: Text("Participer à la bonne action"),
-          onPressed: (){}
+          onPressed: () async {
+            //TODO: For testing
+//            try {
+//              String barcode = await BarcodeScanner.scan();
+//              setState(() => done = widget.action.validate(barcode).toString());
+//            }
+//            catch (e){
+//              setState(() => done = e.toString());
+//            }
+
+            if (widget.action.qrcode == null || widget.action.qrcode == "")
+              Navigator.pushReplacement(context, MaterialPageRoute(
+                  builder: (BuildContext context) => PhotoPage(action: widget.action)
+              ));
+            else
+              Navigator.pushReplacement(context, MaterialPageRoute(
+                builder: (BuildContext context) => QrcodePage(action: widget.action)
+              ));
+          }
         ),
-        Divider()
       ]
     );
   }

@@ -2,6 +2,7 @@
 //import 'dart:html';
 
 import 'package:ba_locale/controller/splash.dart';
+import 'package:ba_locale/model/design.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 
@@ -12,9 +13,9 @@ import 'package:ba_locale/view/app.dart' show AppPage;
 import 'package:ba_locale/view/login.dart' show Login;
   //For drawers
 import 'package:ba_locale/view/drawer/presentaion.dart' show Presentation;
-import 'package:ba_locale/view/drawer/maps.dart' show Maps;
+import 'package:ba_locale/view/bottomBar/maps.dart' show MapsPage;
 import 'package:ba_locale/view/drawer/manual.dart' show Manual;
-import 'package:ba_locale/view/drawer/help.dart' show Help;
+import 'package:ba_locale/view/drawer/help.dart' show HelpPage;
 
 Future<void> main() async {
   //Enable camera:
@@ -44,16 +45,18 @@ class MainApp extends StatelessWidget {
         title: appTitle,
         theme: ThemeData(
           // Define the default brightness and colors.
-          brightness: Brightness.light,
+          //brightness: Brightness.light,
 //          brightness: Brightness.dark,
-          /*canvasColor: _mainColor,
-          scaffoldBackgroundColor: _secColor,
-          primaryColor: _mainColor,
-          accentColor: _mainColor,
-          hintColor: _lastColor,
-          buttonColor: _mainColor,
-          hoverColor: _terColor,
-          cursorColor: _mainColor,*/
+          canvasColor: ThemeDesign.interfaceColor,
+          scaffoldBackgroundColor: ThemeDesign.backgroundColor,
+          primaryColor: ThemeDesign.interfaceColor,
+          //accentColor: ThemeDesign.backgroundColor,
+          hintColor: ThemeDesign.interfaceTxtColor,
+          buttonColor: ThemeDesign.interfaceColor,
+          splashColor: ThemeDesign.interfaceColor,
+          //hoverColor: ThemeDesign.backgroundColor,
+          //cursorColor: ThemeDesign.backgroundColor,
+          //secondaryHeaderColor: ThemeDesign.backgroundColor,
 
 
           // Define the default font family.
@@ -68,16 +71,16 @@ class MainApp extends StatelessWidget {
           ),
         ),
         //initialRoute: '/login',
-        home: SplashPage(camera: camera),
+        home: SplashPage(),
         routes: {
           '/login': (context) => Login(),
           '/createAccount': (context) => CreateAccount(),
-          '/app': (context) => AppPage(camera: camera, uid: ""),
+          '/app': (context) => AppPage(),
           //Drawers routes
           '/app/presentation': (context) => Presentation(),
-          '/app/maps': (context) => Maps(),
+          '/app/maps': (context) => MapsPage(),
           '/app/manual': (context) => Manual(),
-          '/app/help': (context) => Help(),
+          '/app/help': (context) => HelpPage(),
         });
   }
 }
