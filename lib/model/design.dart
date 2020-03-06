@@ -10,8 +10,43 @@ abstract class ThemeDesign {
 
   static Color backgroundColor = const Color(0xFFFFFFFF);
 
-  static Color interfaceColor = const Color(0xFF018C82);
+  static Color interfaceColor = const Color(0xFF02C39A);
   static Color interfaceTxtColor = const Color(0xFFFFFFFF);
+
+  static TextStyle headerStyle = TextStyle(
+    fontSize: 30,
+    color: Colors.black,
+    fontFamily: 'GlassAntiqua'
+  );
+
+  static TextStyle titleStyle = TextStyle(
+    fontSize: 25,
+    color: Colors.black,
+    fontFamily: 'FredokaOne',
+    //fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle subtitleStyle = TextStyle(
+    fontSize: 16,
+    height: 2,
+    color: mainColor,
+    fontFamily: 'Atma',
+    fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle paragraphStyle = TextStyle(
+    fontSize: 16,
+    color: Colors.black,
+    fontFamily: 'AlegreyaSans',
+  );
+}
+
+abstract class ThemeActionDesign {
+  static TextStyle titleStyle = TextStyle(
+    fontSize: 20,
+    color: Color(0xFF000000),
+    fontFamily: 'Arial',
+  );
 }
 
 class InputDesign extends TextFormField {
@@ -47,6 +82,24 @@ class ChangePageDesign extends RaisedButton {
   );
 }
 
+class ParameterValueDesign extends Column{
+  ParameterValueDesign ({@required String parameter, @required String value})
+    : super (
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(
+          parameter,
+          style: ThemeDesign.subtitleStyle
+        ),
+        Text(
+          value,
+          style: ThemeDesign.paragraphStyle,
+          textAlign: TextAlign.justify
+        ),
+    ]);
+}
+
 class TextInterfaceDesign extends Text{
   TextInterfaceDesign (String text, {double size})
     : super (
@@ -54,7 +107,8 @@ class TextInterfaceDesign extends Text{
       style: TextStyle(
         color: ThemeDesign.interfaceTxtColor,
         fontSize: size,
-      ));
+      )
+    );
 }
 
 class TitrePageDesign extends Column {
@@ -68,7 +122,10 @@ class TitrePageDesign extends Column {
         height: 100,
         width: 100,
       ),
-      Text(title),
+      Text(
+        title,
+        style: ThemeDesign.headerStyle,
+      ),
       Text("..................\n")
     ]
   );

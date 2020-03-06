@@ -54,12 +54,11 @@ class AppState extends State<AppPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_bottomTitle[_currentIndex]),
-        //backgroundColor: _bgColor,
+        title: TextInterfaceDesign(_bottomTitle[_currentIndex]),
         leading: Builder(
           builder: (BuildContext context) {
             return IconButton(
-              icon: const Icon(Icons.menu),
+              icon: Icon(Icons.menu, color: ThemeDesign.interfaceTxtColor),
               onPressed: () { Scaffold.of(context).openDrawer(); },
               tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
             );

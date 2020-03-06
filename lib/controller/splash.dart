@@ -1,4 +1,3 @@
-import 'package:ba_locale/model/database/company.dart';
 import 'package:ba_locale/model/database/user.dart';
 import 'package:ba_locale/view/app.dart';
 import 'package:flutter/material.dart';
@@ -31,23 +30,6 @@ class _SplashPageState extends State<SplashPage> {
         );
       }
     });
-//          Firestore.instance
-////              .collection("users")
-////              .document(currentUser.uid)
-////              .get()
-////              .then((DocumentSnapshot result) =>
-////
-////              Navigator.pushReplacement(
-////                  context,
-////                  MaterialPageRoute(
-////                      builder: (context) => AppPage(
-////                        uid: currentUser.uid,
-////                        camera: widget.camera,
-////                      ))))
-////              .catchError((err) => print(err))
-//        }
-//    })
-//        .catchError((err) => print(err));
     super.initState();
   }
 

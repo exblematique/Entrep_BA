@@ -55,6 +55,20 @@ flutter:
   assets:
     - assets/img/
 
+  #Fonts in application
+  fonts:
+    - family: FredokaOne
+      fonts:
+        - asset: assets/fonts/FredokaOne-Regular.ttf
+    - family: Atma
+      fonts:
+          - asset: assets/fonts/Atma-Medium.ttf
+    - family: AlegreyaSans
+      fonts:
+          - asset: assets/fonts/AlegreyaSans-Regular.ttf
+    - family: GlassAntiqua
+      fonts:
+          - asset: assets/fonts/GlassAntiqua-Regular.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 
 class ActionDB{
   CompanyDB company;
-  final String uid, name, description, qrcode;
+  final String uid, name, description, qrcode, place;
   final DateTime startDate, endDate;
   final int nbPoints;
 
   ActionDB({
     @required this.uid,
-    //@required this.company,
+    @required this.place,
     @required this.name,
     @required this.description,
     @required this.nbPoints,
@@ -77,13 +77,13 @@ abstract class ActionsDB{
         for (DocumentSnapshot action in snapshot.documents) {
           availableList.add(new ActionDB(
             uid: action.documentID,
-            //company: CompaniesDB.getElementbyUID(action.data['company'].documentID),
             name: action.data['name'],
             description: action.data['description'],
             nbPoints: action.data['nbPoints'],
             startDate: action.data['startDate'],
             endDate: action.data['endDate'],
             qrcode: action.data['qrcode'],
+            place: action.data['place'] == null ? "" : action.data['place']
           ));
         }
         ready = true;
