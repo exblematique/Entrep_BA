@@ -1,8 +1,9 @@
+
 import 'package:ba_locale/model/database/action.dart';
 import 'package:ba_locale/model/design.dart';
 import 'package:ba_locale/view/photo/photo.dart';
 import 'package:ba_locale/view/photo/qrcode.dart';
-import 'package:flutter/material.dart' show AsyncSnapshot, BuildContext, Color, Column, Container, CrossAxisAlignment, EdgeInsets, FontWeight, FutureBuilder, Icon, Icons, Key, ListView, MainAxisAlignment, MaterialPageRoute, Navigator, Padding, RaisedButton, Row, State, StatefulWidget, Text, TextStyle, Widget, required;
+import 'package:flutter/material.dart' show AssetImage, AsyncSnapshot, BuildContext, Color, Column, Container, CrossAxisAlignment, EdgeInsets, FontWeight, FutureBuilder, Icon, Icons, Image, Key, ListView, MainAxisAlignment, MaterialPageRoute, Navigator, Padding, RaisedButton, Row, State, StatefulWidget, Text, TextStyle, Widget, required;
 
 class ActionPage extends StatefulWidget {
   ActionPage({Key key}) : super(key: key);
@@ -30,13 +31,18 @@ class _ActionPageState extends State<ActionPage> {
     return FutureBuilder<bool>(
       future: ActionsDB.waitToReady(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
-        if (snapshot.hasData)
-          return ListView(children: createDesign());
-        if (snapshot.hasError)
-          return Text('Il y a une erreur : ${snapshot.error}');
+        List<Widget> output = new List<Widget>();
+        output.add(TitrePageDesign("Les actions à réaliser"));
+        if (snapshot.hasData) {
+          List<ActionDesign> actions = createDesign();
+          for (ActionDesign action in actions)
+            output.add(action);
+        }
+        else if (snapshot.hasError)
+          output.add(Text('Il y a une erreur : ${snapshot.error}'));
         else
-          return Text("Actions en cours de téléchargement.... Veuillez patienter....");
-
+          output.add(Text("Actions en cours de téléchargement.... Veuillez patienter...."));
+        return ListView(children: output);
       },
     );
   }
@@ -68,6 +74,10 @@ class _ActionDesignState extends State<ActionDesign>{
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              Image(
+                image: AssetImage('assets/img/logo.png'),
+                height: 75,
+              ),
               Padding(padding: EdgeInsets.only(left: 10),
                 child: Text(widget.action.name,
                   style: TextStyle(fontWeight: FontWeight.bold),
@@ -79,7 +89,7 @@ class _ActionDesignState extends State<ActionDesign>{
               )
             ]
           ),
-          _isEnabled ? descriptionDisplay() : Text("")
+          _isEnabled ? descriptionDisplay() : Container()//Text("")
         ],
       ));
   }

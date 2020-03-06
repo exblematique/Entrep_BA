@@ -1,14 +1,16 @@
+import 'package:ba_locale/model/database/company.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ReductionDB{
-  final String uid, company, name, description, qrcode;
+  CompanyDB company;
+  final String uid, name, description, qrcode;
   final DateTime startDate, endDate;
   final int nbPoints;
 
   ReductionDB({
     @required this.uid,
-    @required this.company,
+    //@required this.company,
     @required this.name,
     @required this.description,
     @required this.nbPoints,
@@ -22,6 +24,10 @@ class ReductionDB{
       return true;
     else
       return false;
+  }
+
+  void addCompany(CompanyDB companyDB) {
+    company = companyDB;
   }
 }
 
@@ -68,7 +74,7 @@ abstract class ReductionsDB{
       for (DocumentSnapshot action in snapshot.documents)
         availableList.add(new ReductionDB(
           uid: action.documentID,
-          company: action.data['company'],
+          //company: action.data['company'],
           name: action.data['name'],
           description: action.data['description'],
           nbPoints: action.data['nbPoints'],

@@ -64,12 +64,12 @@ abstract class UserDB {
     nbPoints = user.data['nbPoints'];
 
     //Update company
-    if (user.data['companies'] != null){
+    //if (user.data['companies'] != null){
       if (await CompaniesDB.waitToReady()) {
          for (DocumentReference company in user.data['companies'])
           companies.add(CompaniesDB.getElementbyUID(company.documentID));
       } else err = true;
-    }
+    //}
     //Update reductions
     if (user.data['reductionsUsed'] != null){
       if (await ReductionsDB.waitToReady()) {

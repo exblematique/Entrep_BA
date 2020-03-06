@@ -23,7 +23,12 @@ class CompanyDB{
     this.startDate,
     this.endDate,
     this.qrcode,
-  });
+  }){
+    for (ActionDB action in actions)
+      action.addCompany(this);
+    for (ReductionDB reduction in reductions)
+      reduction.addCompany(this);
+  }
 }
 
 //Abstract class with all pieces of information on reduction
@@ -43,7 +48,9 @@ abstract class CompaniesDB{
 
   //Find element by UID
   static CompanyDB getElementbyUID (String uid){
+    print(companies);
     for (CompanyDB company in companies){
+      print(company);
       if (company.uid == uid)
         return company;
     }
@@ -58,7 +65,7 @@ abstract class CompaniesDB{
     //Reset all states
     ready = false;
     err = false;
-
+  print("Download companies");
     //Downloading data
     //If success, update reductions list
     QuerySnapshot snapshot = await Firestore.instance

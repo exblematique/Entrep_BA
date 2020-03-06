@@ -56,3 +56,20 @@ class TextInterfaceDesign extends Text{
         fontSize: size,
       ));
 }
+
+class TitrePageDesign extends Column {
+  TitrePageDesign (String title)
+  : super (
+    mainAxisAlignment : MainAxisAlignment.start,
+    crossAxisAlignment : CrossAxisAlignment.center,
+    children: <Widget> [
+      Image(
+        image: AssetImage('assets/img/logo.png'),
+        height: 100,
+        width: 100,
+      ),
+      Text(title),
+      Text("..................\n")
+    ]
+  );
+}

@@ -3,14 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ActionDB{
-  final CompanyDB company;
+  CompanyDB company;
   final String uid, name, description, qrcode;
   final DateTime startDate, endDate;
   final int nbPoints;
 
   ActionDB({
     @required this.uid,
-    @required this.company,
+    //@required this.company,
     @required this.name,
     @required this.description,
     @required this.nbPoints,
@@ -27,6 +27,10 @@ class ActionDB{
   }
 
   Future<bool> delete() async => ActionsDB.deleteItem(this);
+
+  void addCompany(CompanyDB companyDB) {
+    company = companyDB;
+  }
 }
 
 //Abstract class with all pieces of information on reduction
@@ -39,6 +43,7 @@ abstract class ActionsDB{
   //Check if data are downloaded
   //If not, try to download and return true if successful
   static Future<bool> waitToReady() async {
+    //await CompaniesDB.waitToReady();
     if (!ready)
       await downloadData();
     return ready && !err;
@@ -72,7 +77,7 @@ abstract class ActionsDB{
         for (DocumentSnapshot action in snapshot.documents) {
           availableList.add(new ActionDB(
             uid: action.documentID,
-            company: CompaniesDB.getElementbyUID(action.data['company'].documentID),
+            //company: CompaniesDB.getElementbyUID(action.data['company'].documentID),
             name: action.data['name'],
             description: action.data['description'],
             nbPoints: action.data['nbPoints'],
