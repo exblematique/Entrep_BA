@@ -4,19 +4,19 @@ import 'package:flutter/material.dart';
 
 class ReductionDB{
   CompanyDB company;
-  final String uid, name, description, qrcode;
+  final String uid, name, description, qrcode, place;
   final DateTime startDate, endDate;
   final int nbPoints;
 
   ReductionDB({
     @required this.uid,
-    //@required this.company,
+    @required this.place,
     @required this.name,
     @required this.description,
     @required this.nbPoints,
     this.startDate,
     this.endDate,
-    this.qrcode,
+    this.qrcode
   });
 
   bool validate(String qrcode) {
@@ -25,6 +25,8 @@ class ReductionDB{
     else
       return false;
   }
+
+  Future<bool> delete() async => ReductionsDB.deleteItem(this);
 
   void addCompany(CompanyDB companyDB) {
     company = companyDB;
@@ -52,9 +54,9 @@ abstract class ReductionsDB{
 
   //Find element by UID
   static ReductionDB getElementbyUID (String uid){
-    for (ReductionDB action in availableList){
-      if (action.uid == uid)
-        return action;
+    for (ReductionDB reduction in availableList){
+      if (reduction.uid == uid)
+        return reduction;
     }
     return null;
   }
@@ -71,18 +73,37 @@ abstract class ReductionsDB{
         .getDocuments()
         .then((QuerySnapshot snapshot){
       availableList.clear();
-      for (DocumentSnapshot action in snapshot.documents)
+      for (DocumentSnapshot reduction in snapshot.documents)
         availableList.add(new ReductionDB(
-          uid: action.documentID,
-          //company: action.data['company'],
-          name: action.data['name'],
-          description: action.data['description'],
-          nbPoints: action.data['nbPoints'],
-          startDate: action.data['startDate'],
-          endDate: action.data['endDate'],
-          qrcode: action.data['qrcode'],
+          uid: reduction.documentID,
+          name: reduction.data['name'],
+          description: reduction.data['description'],
+          nbPoints: reduction.data['nbPoints'],
+          startDate: reduction.data['startDate'],
+          endDate: reduction.data['endDate'],
+          qrcode: reduction.data['qrcode'],
+          place: reduction.data['place']  == null ? "" : reduction.data['place'],
         ));
       ready = true;
     }).catchError((_){err = true;});
+  }
+
+  static Future<bool> deleteItem(ReductionDB reduction) async {
+    bool error = false;
+    await Firestore.instance
+        .collection("reductions")
+        .document(reduction.uid)
+        .delete()
+//TODO remove reference
+//    .then((_) async {
+//        await Firestore.instance
+//          .collection("companies")
+//          .document(action.company.uid)
+//          .updateData({})
+//        availableList.remove(action);
+//
+//      })
+        .catchError((_) => error = true);
+    return !error;
   }
 }

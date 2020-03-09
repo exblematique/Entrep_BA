@@ -93,11 +93,12 @@ class _ActionDesignState extends State<ActionDesign>{
                 ]
               ),
           ]),
-          _isEnabled ? descriptionDisplay() : Container()//Text("")
+          _isEnabled ? descriptionDisplay() : Container(),
+          SizedBox(height: 10),
         ],
       ));
   }
-  String done = "";
+
   Widget descriptionDisplay (){
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -165,7 +166,7 @@ class _ActionDesignState extends State<ActionDesign>{
                 builder: (BuildContext context) => QrcodePage(action: widget.action)
               ));
           }
-        ),
+        )
       ]
     );
   }

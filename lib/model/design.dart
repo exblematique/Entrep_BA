@@ -37,7 +37,7 @@ abstract class ThemeDesign {
   static TextStyle paragraphStyle = TextStyle(
     fontSize: 16,
     color: Colors.black,
-    fontFamily: 'AlegreyaSans',
+    fontFamily: 'AlegreyaSans'
   );
 }
 

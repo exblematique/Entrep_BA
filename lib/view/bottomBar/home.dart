@@ -26,14 +26,16 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        Image(
-            image: AssetImage('assets/img/explaination.png')
-        ),
-      ],
+    return OrientationBuilder(
+      builder: (context, orientation){
+        if (orientation == Orientation.landscape)
+          return Center(child: Image(image: AssetImage('assets/img/explaination.png')));
+        return ListView(
+          children: <Widget>[
+            Image(image: AssetImage('assets/img/acceuil_1.png')),
+            Image(image: AssetImage('assets/img/acceuil_2.png')),
+        ]);
+      }
     );
   }
 }

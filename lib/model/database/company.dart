@@ -87,7 +87,7 @@ abstract class CompaniesDB{
       }
 
       List<ReductionDB> reductions = new List<ReductionDB>();
-      if (company.data['reductions'] != null && company.data['reduction'].isNotEmpty) {
+      if (company.data['reductions'] != null && company.data['reductions'].isNotEmpty) {
         await ReductionsDB.waitToReady();
         for (DocumentReference reduction in company.data['reductions'])
           reductions.add(ReductionsDB.getElementbyUID(reduction.documentID));

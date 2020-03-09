@@ -12,7 +12,7 @@ import 'package:ba_locale/view/createAccount.dart' show CreateAccount;
 import 'package:ba_locale/view/app.dart' show AppPage;
 import 'package:ba_locale/view/login.dart' show Login;
   //For drawers
-import 'package:ba_locale/view/drawer/presentaion.dart' show Presentation;
+import 'package:ba_locale/view/drawer/presentation.dart' show Presentation;
 import 'package:ba_locale/view/bottomBar/maps.dart' show MapsPage;
 import 'package:ba_locale/view/drawer/manual.dart' show Manual;
 import 'package:ba_locale/view/drawer/help.dart' show HelpPage;
