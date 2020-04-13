@@ -1,6 +1,7 @@
+import 'package:ba_locale/model/design.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:ba_locale/model/design.dart';
+import 'package:ba_locale/model/style.dart';
 
 class Presentation extends StatefulWidget {
   @override

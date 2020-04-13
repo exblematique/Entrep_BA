@@ -1,9 +1,9 @@
 //All widgets (generic and custom)
 import 'package:ba_locale/controller/splash.dart';
+import 'package:ba_locale/model/design.dart';
 import 'package:ba_locale/model/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:ba_locale/model/design.dart';
 
 class LoginApp extends Login {
   Widget build(BuildContext context) {

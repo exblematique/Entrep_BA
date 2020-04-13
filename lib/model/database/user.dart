@@ -10,7 +10,7 @@ abstract class UserDB {
   static bool err = false;
 
   //Generic pieces of information
-  static String firstName, lastName, birthDate, email;
+  static String firstName, lastName, birthDate, email, pseudo;
   static int nbPoints;
   static List<CompanyDB> companies = new List<CompanyDB>();
   static List<ReductionDB> reductionsUsed = new List<ReductionDB>();
@@ -57,6 +57,7 @@ abstract class UserDB {
         print(e);
       });
     if (err) return;
+    pseudo = user.data['pseudo'];
     firstName = user.data['firstName'];
     lastName = user.data['lastName'];
     birthDate = user.data['birthDate'];
@@ -91,6 +92,7 @@ abstract class UserDB {
   static void clear(){
     ready = false;
     err = false;
+    pseudo = null;
     firstName = null;
     lastName = null;
     birthDate = null;
@@ -103,6 +105,7 @@ abstract class UserDB {
 
   static Map<String, String> getAlterable() {
     Map <String, String> output = new Map<String, String>();
+    output["Pseudo"] = pseudo;
     output["Nom"] = lastName;
     output["Prénom"] = firstName;
     output["Date de naissance"] = birthDate;

@@ -1,5 +1,14 @@
+/*
+ * This page contain the structure of application
+ * - Bottom Bar
+ * - Redirection to other page
+ * - Drawer
+ * - Header
+ */
+
 import 'package:ba_locale/model/database/user.dart';
-import 'package:ba_locale/model/design.dart';
+import 'package:ba_locale/model/style.dart';
+import 'package:ba_locale/model/text.dart';
 import 'package:ba_locale/view/login.dart';
 import 'package:flutter/material.dart';
 

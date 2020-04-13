@@ -1,9 +1,10 @@
 
 import 'package:ba_locale/model/database/action.dart';
 import 'package:ba_locale/model/design.dart';
+import 'package:ba_locale/model/style.dart';
 import 'package:ba_locale/view/photo/photo.dart';
 import 'package:ba_locale/view/photo/qrcode.dart';
-import 'package:flutter/material.dart' show Alignment, AssetImage, AsyncSnapshot, BoxDecoration, BoxFit, BuildContext, Column, Container, CrossAxisAlignment, DecorationImage, EdgeInsets, FutureBuilder, Icon, Icons, Image, Key, ListView, MainAxisAlignment, MaterialPageRoute, Navigator, Padding, RaisedButton, Row, SizedBox, Stack, State, StatefulWidget, Text, TextAlign, Widget, required;
+import 'package:flutter/material.dart' show Alignment, AssetImage, AsyncSnapshot, BoxDecoration, BoxFit, BuildContext, Color, Column, Container, CrossAxisAlignment, DecorationImage, EdgeInsets, FutureBuilder, Icon, Icons, Image, Key, ListView, MainAxisAlignment, MaterialPageRoute, Navigator, Padding, RaisedButton, Row, SizedBox, Stack, State, StatefulWidget, Text, TextAlign, Widget, required;
 
 class ActionPage extends StatefulWidget {
   ActionPage({Key key}) : super(key: key);
@@ -86,9 +87,13 @@ class _ActionDesignState extends State<ActionDesign>{
                       style: ThemeDesign.titleStyle,
                     ),
                   ),
-                  RaisedButton(
-                    child: Icon(Icons.arrow_drop_down),
-                    onPressed: () => setState(() => _isEnabled = !_isEnabled)
+                  SizedBox(
+                    width: 50,
+                    child: RaisedButton(
+                      color: Color.fromRGBO(255, 0, 0, 0),
+                      child: Icon(Icons.arrow_drop_down),
+                      onPressed: () => setState(() => _isEnabled = !_isEnabled)
+                    )
                   )
                 ]
               ),

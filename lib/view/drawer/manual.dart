@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:ba_locale/model/design.dart';
+import 'package:flutter/material.dart';
 
 class Manual extends StatefulWidget {
   @override

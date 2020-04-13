@@ -1,6 +1,6 @@
 import 'package:ba_locale/model/database/action.dart';
 import 'package:ba_locale/model/database/company.dart';
-import 'package:ba_locale/model/design.dart';
+import 'package:ba_locale/model/style.dart';
 import 'package:flutter/material.dart';
 
 class ManageActionPage extends StatefulWidget {

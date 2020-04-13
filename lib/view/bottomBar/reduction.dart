@@ -1,5 +1,6 @@
 import 'package:ba_locale/model/database/reduction.dart';
 import 'package:ba_locale/model/design.dart';
+import 'package:ba_locale/model/style.dart';
 import 'package:flutter/material.dart' show Alignment, AssetImage, AsyncSnapshot, BoxDecoration, BoxFit, BuildContext, Column, Container, CrossAxisAlignment, DecorationImage, EdgeInsets, FutureBuilder, Icon, Icons, Image, Key, ListView, MainAxisAlignment, Padding, RaisedButton, Row, SizedBox, Stack, State, StatefulWidget, Text, TextAlign, Widget, required;
 
 class ReductionPage extends StatefulWidget {
