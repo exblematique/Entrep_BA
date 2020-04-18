@@ -1,7 +1,7 @@
 //All widgets (generic and custom)
 import 'package:ba_locale/controller/splash.dart';
 import 'package:ba_locale/model/design.dart';
-import 'package:ba_locale/model/validators.dart';
+import 'package:ba_locale/controller/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -11,10 +11,8 @@ class LoginApp extends Login {
 
     return MaterialApp(
       title: appTitle,
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(appTitle),
-        ),
+      home: ScaffoldDesign(
+        title: "Bienvenue sur la BA locale !",
         body: Login(),
       ),
     );

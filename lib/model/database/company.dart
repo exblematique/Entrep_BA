@@ -1,13 +1,19 @@
-
+/**
+ * This page contains interaction with the database for companies
+ * CompanyDB is a unique action
+ * CompaniesDB contains all companies available in the database
+ */
 import 'package:ba_locale/model/database/action.dart';
 import 'package:ba_locale/model/database/reduction.dart';
+import 'package:ba_locale/controller/script.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-//Abstract class for reduction items
+//Abstract class for company items
 class CompanyDB{
   final String uid, name, description, qrcode;
   final DateTime startDate, endDate;
+  final Image image;
   final int nbPoints;
   final List<ActionDB> actions;
   final List<ReductionDB> reductions;
@@ -20,6 +26,7 @@ class CompanyDB{
     @required this.actions,
     @required this.reductions,
     @required this.nbPoints,
+    this.image,
     this.startDate,
     this.endDate,
     this.qrcode,
@@ -31,7 +38,7 @@ class CompanyDB{
   }
 }
 
-//Abstract class with all pieces of information on reduction
+//Abstract class with all pieces of information on companies
 abstract class CompaniesDB{
   //This variable equal true when all data are downloaded
   static bool ready = false;
@@ -50,7 +57,6 @@ abstract class CompaniesDB{
   static CompanyDB getElementbyUID (String uid){
     print(companies);
     for (CompanyDB company in companies){
-      print(company);
       if (company.uid == uid)
         return company;
     }
@@ -65,7 +71,6 @@ abstract class CompaniesDB{
     //Reset all states
     ready = false;
     err = false;
-  print("Download companies");
     //Downloading data
     //If success, update reductions list
     QuerySnapshot snapshot = await Firestore.instance
@@ -103,6 +108,7 @@ abstract class CompaniesDB{
         startDate: company.data['startDate'],
         endDate: company.data['endDate'],
         qrcode: company.data['qrcode'],
+        image: strToImage(company.data['image']),
       ));
     }
     ready = true;

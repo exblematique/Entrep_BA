@@ -1,4 +1,4 @@
-/*
+/**
  * This page contain the structure of application
  * - Bottom Bar
  * - Redirection to other page
@@ -129,13 +129,11 @@ class AppState extends State<AppPage> {
           ),
         )
       ),
-      body: body,
+      body: _bottomViews[_currentIndex],
 
       bottomNavigationBar: BottomNavigationBar(
         onTap: onTabTapped,
         currentIndex: _currentIndex,
-        //fixedColor: ThemeDesign.interfaceColor,
-        //backgroundColor: ThemeDesign.interfaceColor,
         selectedItemColor: ThemeDesign.mainTxtColor,
         unselectedItemColor: ThemeDesign.secTxtColor,
         items: [
@@ -171,13 +169,3 @@ class AppState extends State<AppPage> {
     });
   }
 }
-
-//class ListTileDesign extends ListTile {
-//
-//  ListTileDesign({@required key, @required String title, @required IconData icon, @required StatefulWidget redirect})
-//    : super (
-//      leading: new Icon(icon),
-//      title: Text(title),
-//      onTap: () => setState(() => body = Manual());
-//  );
-//}

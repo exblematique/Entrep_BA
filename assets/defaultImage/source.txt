@@ -1,0 +1,2 @@
+action.png : https://svgsilh.com/fr/009688/image/1119165.html
+company.png : https://pixabay.com/illustrations/building-company-business-4052951/

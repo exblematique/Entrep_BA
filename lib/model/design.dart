@@ -79,3 +79,15 @@ class ChangePageDesign extends RaisedButton {
   );
 }
 
+//This design is enabled for all sub-pages of the application
+class ScaffoldDesign extends Scaffold {
+  ScaffoldDesign({@required String title, @required Widget body, Widget floatingActionButton}) : super (
+    appBar: AppBar(
+        title: TextInterfaceDesign(title),
+        centerTitle: true,
+        iconTheme: IconThemeData(color: ThemeDesign.interfaceTxtColor)
+    ),
+    body: body,
+    floatingActionButton: floatingActionButton
+  );
+}

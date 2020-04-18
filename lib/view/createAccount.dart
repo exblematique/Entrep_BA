@@ -1,6 +1,6 @@
 import 'package:ba_locale/controller/splash.dart';
 import 'package:ba_locale/model/design.dart';
-import 'package:ba_locale/model/validators.dart';
+import 'package:ba_locale/controller/validators.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -29,11 +29,8 @@ class CreateAccountState extends State<CreateAccount> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Text("Création d'un compte"),
-          centerTitle: true
-      ),
+    return ScaffoldDesign(
+      title: "Création d'un compte",
       body: Builder(builder: (BuildContext context) {
         return Form(
           key: _registerFormKey,
@@ -105,8 +102,6 @@ class CreateAccountState extends State<CreateAccount> {
                 }
               },
             ),
-                //ChangePageDesign("Créer un compte",
-                //    newPage: '/home', key: _formKey, context: context),
               ],
             ),
           );

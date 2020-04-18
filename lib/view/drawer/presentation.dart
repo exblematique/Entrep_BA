@@ -24,11 +24,8 @@ class PresentationState extends State<Presentation> {
           output.add(Text('Il y a une erreur : ${snapshot.error}'));
         else
           output.add(Text("Actions en cours de téléchargement.... Veuillez patienter...."));
-        return Scaffold(
-          appBar: AppBar(
-            title: Text("Centre d'aide"),
-            centerTitle: true
-          ),
+        return ScaffoldDesign(
+          title: "Présentation",
           body: ListView(children: output)
         );
       },

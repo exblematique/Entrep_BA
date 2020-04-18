@@ -5,6 +5,7 @@ import 'package:ba_locale/model/style.dart';
 import 'package:ba_locale/view/photo/photo.dart';
 import 'package:ba_locale/view/photo/qrcode.dart';
 import 'package:flutter/material.dart' show Alignment, AssetImage, AsyncSnapshot, BoxDecoration, BoxFit, BuildContext, Color, Column, Container, CrossAxisAlignment, DecorationImage, EdgeInsets, FutureBuilder, Icon, Icons, Image, Key, ListView, MainAxisAlignment, MaterialPageRoute, Navigator, Padding, RaisedButton, Row, SizedBox, Stack, State, StatefulWidget, Text, TextAlign, Widget, required;
+import 'package:flutter/widgets.dart';
 
 class ActionPage extends StatefulWidget {
   ActionPage({Key key}) : super(key: key);
@@ -72,22 +73,30 @@ class _ActionDesignState extends State<ActionDesign>{
             children: <Widget>[
               Image(
                 image: AssetImage('assets/img/Bandeau_Action.png'),
-                //height: 75,
+                height: 75,
+                width: 500000, //This value enable to fill all width of the screen
+                fit: BoxFit.fitWidth,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Image(
-                    image: AssetImage('assets/img/logo.jpg'),
-                    height: 75,
-                  ),
-                  Padding(padding: EdgeInsets.only(left: 10),
-                    child: Text(widget.action.name,
-                      style: ThemeDesign.titleStyle,
-                    ),
-                  ),
+                  Row(
+                    children: <Widget>[
+                      Image(
+                        image: widget.action.image == null ? AssetImage('assets/defaultImage/action.png') : widget.action.image.image,
+                        height: 75,
+                        width: 75,
+                        fit: BoxFit.fitHeight,
+                      ),
+                      Padding(padding: EdgeInsets.only(left: 20),
+                        child: Text(widget.action.name,
+                          style: ThemeDesign.titleStyle,
+                        ),
+                      ),
+                    ]),
                   SizedBox(
+                    height: 75,
                     width: 50,
                     child: RaisedButton(
                       color: Color.fromRGBO(255, 0, 0, 0),
@@ -131,7 +140,10 @@ class _ActionDesignState extends State<ActionDesign>{
                 )
               ]),
               Row(children: <Widget>[
-                Image.asset('assets/img/logo.jpg', height: 100),
+                Image(
+                  image: widget.action.company.image == null ? AssetImage('assets/defaultImage/company.png') : widget.action.company.image.image,
+                  height: 100,
+                ),
                 Container(
                   alignment: Alignment.center,
                   child: Text(
@@ -163,11 +175,11 @@ class _ActionDesignState extends State<ActionDesign>{
 //            }
 
             if (widget.action.qrcode == null || widget.action.qrcode == "")
-              Navigator.pushReplacement(context, MaterialPageRoute(
+              Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context) => PhotoPage(action: widget.action)
               ));
             else
-              Navigator.pushReplacement(context, MaterialPageRoute(
+              Navigator.push(context, MaterialPageRoute(
                 builder: (BuildContext context) => QrcodePage(action: widget.action)
               ));
           }

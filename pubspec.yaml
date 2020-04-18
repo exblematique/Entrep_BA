@@ -27,7 +27,9 @@ dependencies:
   camera:
   firebase_core: ^0.4.0+9
   firebase_auth: ^0.14.0+5
+  firebase_storage: ^3.1.5
   cloud_firestore: ^0.12.9+5
+
   qr_mobile_vision: ^0.3.1
 
 
@@ -54,6 +56,7 @@ flutter:
   # Assets in application
   assets:
     - assets/img/
+    - assets/defaultImage/
 
   #Fonts in application
   fonts:

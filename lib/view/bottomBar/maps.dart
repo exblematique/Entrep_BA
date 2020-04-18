@@ -1,3 +1,7 @@
+/**
+ * This page displays the map from Google
+ **/
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -34,12 +38,6 @@ class MapsPageState extends State<MapsPage> {
 
   @override
   Widget build(BuildContext context) {
-//    return Scaffold(
-//      appBar: AppBar(
-//          title: Text("Chercher un commençant"),
-//          centerTitle: true
-//      ),
-//      body: Builder(builder: (BuildContext context) {
         return GoogleMap(
           onMapCreated: _onMapCreated,
           initialCameraPosition: CameraPosition(
@@ -48,7 +46,5 @@ class MapsPageState extends State<MapsPage> {
           ),
           markers: _markers.values.toSet(),
         );
-////      }),
-//    );
   }
 }

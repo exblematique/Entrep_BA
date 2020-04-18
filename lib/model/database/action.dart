@@ -1,10 +1,17 @@
+/**
+ * This page contains interaction with the database for actions
+ * ActionDB is a unique action
+ * ActionsDB contains all actions available in the database
+ */
 import 'package:ba_locale/model/database/company.dart';
+import 'package:ba_locale/controller/script.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ActionDB{
   CompanyDB company;
   final String uid, name, description, qrcode, place;
+  final Image image;
   final DateTime startDate, endDate;
   final int nbPoints;
 
@@ -14,6 +21,7 @@ class ActionDB{
     @required this.name,
     @required this.description,
     @required this.nbPoints,
+    this.image,
     this.startDate,
     this.endDate,
     this.qrcode,
@@ -83,7 +91,8 @@ abstract class ActionsDB{
             startDate: action.data['startDate'],
             endDate: action.data['endDate'],
             qrcode: action.data['qrcode'],
-            place: action.data['place'] == null ? "" : action.data['place']
+            place: action.data['place'] == null ? "" : action.data['place'],
+            image: strToImage(action.data['image']),
           ));
         }
         ready = true;

@@ -12,18 +12,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-//  FirebaseUser currentUser;
-//
-//  @override
-//  initState() {
-//    this.getCurrentUser();
-//    super.initState();
-//  }
-//
-//  void getCurrentUser() async {
-//    currentUser = await FirebaseAuth.instance.currentUser();
-//  }
-
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(

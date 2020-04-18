@@ -1,5 +1,5 @@
 import 'package:ba_locale/model/database/action.dart';
-
+import 'package:ba_locale/model/design.dart';
 import 'package:flutter/material.dart';
 
 class QrcodePage extends StatefulWidget {
@@ -19,16 +19,18 @@ class _QrcodePageState extends State<QrcodePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        new Container(
-          child: new MaterialButton(
-              onPressed: (){}, child: new Text("Scan")),
-          padding: const EdgeInsets.all(8.0),
-        ),
-        new Text(barcode),
-      ],
-    );
+    return ScaffoldDesign(
+      title: "Scanner un QRCode",
+      body: Column(
+        children: <Widget>[
+          new Container(
+            child: new MaterialButton(
+                onPressed: (){}, child: new Text("Scan")),
+            padding: const EdgeInsets.all(8.0),
+          ),
+          new Text(barcode),
+        ],
+      ));
   }
 
 //  Future scan() async {

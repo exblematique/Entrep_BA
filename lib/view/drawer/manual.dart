@@ -10,11 +10,8 @@ class ManualState extends State<Manual> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Text("Centre d'aide"),
-          centerTitle: true
-      ),
+    return ScaffoldDesign(
+      title: "Centre d'aide",
       body: Builder(builder: (BuildContext context) {
         return Form(
           child: Column(

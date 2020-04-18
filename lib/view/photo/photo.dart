@@ -4,6 +4,7 @@ import 'dart:async';
 //Send image to server
 import 'dart:convert';
 import 'package:ba_locale/model/database/action.dart';
+import 'package:ba_locale/model/design.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:camera/camera.dart';
@@ -56,14 +57,12 @@ class PhotoPageState extends State<PhotoPage> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             // If the Future is complete, display the preview.
-            return Scaffold(
+            return ScaffoldDesign(
+                title: "Prendre une photo",
                 body: CameraPreview(_controller),
                 floatingActionButton: FloatingActionButton(
                   child: Icon(Icons.camera_alt),
-                  // Provide an onPressed callback.
                   onPressed: () async {
-                    // Take the Picture in a try / catch block. If anything goes wrong,
-                    // catch the error.
                     try {
                       // Ensure that the camera is initialized.
                       await _initializeControllerFuture;

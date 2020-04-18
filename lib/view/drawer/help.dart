@@ -24,11 +24,8 @@ class HelpPageState extends State<HelpPage> {
           output.add(Text('Il y a une erreur : ${snapshot.error}'));
         else
           output.add(Text("Actions en cours de téléchargement.... Veuillez patienter...."));
-        return Scaffold(
-            appBar: AppBar(
-                title: Text("Centre d'aide"),
-                centerTitle: true
-            ),
+        return ScaffoldDesign(
+            title: "Centre d'aide",
             body: ListView(children: output)
         );
       },
