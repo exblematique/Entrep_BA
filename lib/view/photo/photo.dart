@@ -4,6 +4,7 @@ import 'dart:async';
 //Send image to server
 import 'dart:convert';
 import 'package:ba_locale/model/database/action.dart';
+import 'package:ba_locale/model/database/user.dart';
 import 'package:ba_locale/model/design.dart';
 import 'package:http/http.dart' as http;
 
@@ -87,8 +88,10 @@ class PhotoPageState extends State<PhotoPage> {
                               SendingPicture(imagePath: path),
                         ),
                       );
-                      if (result == true) Scaffold.of(context).showSnackBar(
-                          SnackBar(content: Text('Photo envoyée ! :)')));
+                      if (result == true) {
+                        UserDB.addPoints(widget.action.nbPoints);
+                        Navigator.pop(context, true);
+                      }
                     } catch (e) {print(e);}
                   },
                 ),
@@ -128,7 +131,7 @@ class SendingPictureState extends State<SendingPicture> {
               RaisedButton(
                 onPressed: () async {
                   File file = File(widget.imagePath);
-                  String phpEndPoint = 'http://minecraft.yoannchappaz.best/BA/receiveImage.php';
+                  String phpEndPoint = 'https://minecraft.yoannchappaz.best/receiveImage.php';
                   String base64Image = base64Encode(file.readAsBytesSync());
                   String fileName = file.path.split("/").last;
 
@@ -137,14 +140,14 @@ class SendingPictureState extends State<SendingPicture> {
                     "image": base64Image,
                     "name": fileName,
                   }).catchError((e){Scaffold.of(_scaffoldContext).showSnackBar(
-                      SnackBar(content: Text('Une erreur est survenue lors de l\'envoi...\nRéessayez à nouveau')));
+                      SnackBar(content: Text('Une erreur est survenue lors de l\'envoi...\nRéessayez à nouveau\nCode erreur : ' + e)));
                   });
+
                   //Check result
-                  if (res.statusCode == 200){
-                    Scaffold.of(_scaffoldContext).showSnackBar(
-                      SnackBar(content: Text('Photo envoyée ! :)')));
+                  //If OK, adding points to user and return of the previous screen
+                  //If not, display a error message
+                  if (res.statusCode == 200)
                     Navigator.pop(context, true);
-                  }
                   else Scaffold.of(_scaffoldContext).showSnackBar(
                       SnackBar(content: Text('Erreur lors de l\'envoi...\nRéessayez à nouveau')));
                 },

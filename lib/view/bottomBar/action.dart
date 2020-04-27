@@ -1,12 +1,12 @@
-
 import 'package:ba_locale/model/database/action.dart';
 import 'package:ba_locale/model/database/user.dart';
 import 'package:ba_locale/model/design.dart';
 import 'package:ba_locale/model/style.dart';
 import 'package:ba_locale/view/photo/photo.dart';
-import 'package:flutter/material.dart' show Alignment, AssetImage, AsyncSnapshot, BoxDecoration, BoxFit, BuildContext, Color, Column, Container, CrossAxisAlignment, DecorationImage, EdgeInsets, FutureBuilder, Icon, Icons, Image, Key, ListView, MainAxisAlignment, MaterialPageRoute, Navigator, Padding, RaisedButton, Row, Scaffold, SizedBox, SnackBar, Stack, State, StatefulWidget, Text, TextAlign, Widget, required;
+import 'package:flutter/material.dart' show Alignment, AssetImage, AsyncSnapshot, BoxDecoration, BoxFit, BuildContext, Color, Column, Container, CrossAxisAlignment, DecorationImage, EdgeInsets, FutureBuilder, Icon, Icons, Image, Key, ListView, MainAxisAlignment, MaterialPageRoute, Navigator, Padding, RaisedButton, Row, Scaffold, SizedBox, SnackBar, SnackBarAction, Stack, State, StatefulWidget, Text, TextAlign, Widget, required;
 import 'package:flutter/widgets.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
+import 'package:url_launcher/url_launcher.dart';
 
 class ActionPage extends StatefulWidget {
   ActionPage({Key key}) : super(key: key);
@@ -167,11 +167,30 @@ class _ActionDesignState extends State<ActionDesign>{
         widget.action.qrcode == null || widget.action.qrcode == ""
         ? RaisedButton(
             child: Text("Prendre une photo de la bonne action"),
-            onPressed: () async =>
-              Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) => PhotoPage(action: widget.action)
-            ))
-        )
+            onPressed: () async {
+              bool success = await Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      PhotoPage(action: widget.action)
+              ));
+              //If sending picture is a success, display a message with the link of all pictures
+              if (success)
+                Scaffold.of(context).showSnackBar(
+                  SnackBar(
+                      content: Text('Photo envoyée ! :)\nVous avez gagné ' + widget.action.nbPoints.toString() + ' points'),
+                      action: SnackBarAction(
+                        label: "Voir les autres photos",
+                        onPressed: () async {
+                          const url = 'https://minecraft.yoannchappaz.best/BA';
+                          if (await canLaunch(url)) {
+                            await launch(url);
+                          } else {
+                            throw 'Could not launch $url';
+                          }
+                        }
+                      )
+
+                ));
+            })
         //This button take a photo of QRCode
         //Display a Snackbar with information about picture
         : RaisedButton(
@@ -195,10 +214,6 @@ class _ActionDesignState extends State<ActionDesign>{
                       content: Text("Il y a une erreur inconnue")));
                 }
             }
-
-//TODO CLEAN                Navigator.push(context, MaterialPageRoute(
-//                    builder: (BuildContext context) => QrcodePage(action: widget.action)
-//            ))
         )
       ]
     );
