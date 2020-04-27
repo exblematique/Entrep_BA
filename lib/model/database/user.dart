@@ -13,7 +13,7 @@ abstract class UserDB {
   static String uid, firstName, lastName, birthDate, email, pseudo;
   static int nbPoints;
   static List<CompanyDB> companies = new List<CompanyDB>();
-  static List<ReductionDB> reductionsUsed = new List<ReductionDB>();
+  static Map<ReductionDB, bool> reductionsUsed = new Map<ReductionDB, bool>();
   static Map<ActionDB, bool> actionsDone = new Map<ActionDB, bool>();
 
   //Check if data are downloaded
@@ -65,15 +65,15 @@ abstract class UserDB {
     nbPoints = user.data['nbPoints'];
 
     //Update company
-      if (await CompaniesDB.waitToReady()) {
-         for (DocumentReference company in user.data['companies'])
-          companies.add(CompaniesDB.getElementbyUID(company.documentID));
-      } else err = true;
+    if (await CompaniesDB.waitToReady()) {
+       for (DocumentReference company in user.data['companies'])
+        companies.add(CompaniesDB.getElementbyUID(company.documentID));
+    } else err = true;
     //Update reductions
     if (user.data['reductionsUsed'] != null){
       if (await ReductionsDB.waitToReady()) {
-        for (String reduction in user.data['reductions'])
-          reductionsUsed.add(ReductionsDB.getElementbyUID(reduction));
+        for (String reduction in user.data['reductions'].keys().toList())
+          reductionsUsed[ReductionsDB.getElementbyUID(reduction)] = user.data['reductions'][reduction];
       } else err = true;
     }
     //Update actions

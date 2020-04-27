@@ -1,7 +1,11 @@
+import 'dart:typed_data';
+
 import 'package:ba_locale/model/database/reduction.dart';
+import 'package:ba_locale/model/database/user.dart';
 import 'package:ba_locale/model/design.dart';
 import 'package:ba_locale/model/style.dart';
-import 'package:flutter/material.dart' show Alignment, AssetImage, AsyncSnapshot, BoxDecoration, BoxFit, BuildContext, Color, Column, Container, CrossAxisAlignment, DecorationImage, EdgeInsets, FutureBuilder, Icon, Icons, Image, Key, ListView, MainAxisAlignment, Padding, RaisedButton, Row, SizedBox, Stack, State, StatefulWidget, Text, TextAlign, Widget, required;
+import 'package:flutter/material.dart' show AlertDialog, Alignment, AssetImage, AsyncSnapshot, BoxDecoration, BoxFit, BuildContext, Color, Column, Container, CrossAxisAlignment, DecorationImage, EdgeInsets, FlatButton, FutureBuilder, Icon, Icons, Image, Key, ListView, MainAxisAlignment, Navigator, Padding, RaisedButton, Row, SizedBox, Stack, State, StatefulWidget, Text, TextAlign, Widget, required, showDialog;
+import 'package:qrscan/qrscan.dart' as scanner;
 
 class ReductionPage extends StatefulWidget {
   ReductionPage({Key key}) : super(key: key);
@@ -142,7 +146,7 @@ class _ReductionDesignState extends State<ReductionDesign>{
                   Container(
                       alignment: Alignment.center,
                       child: Text(
-                        "+" + widget.reduction.nbPoints.toString() + "\npts",
+                        "-" + widget.reduction.nbPoints.toString() + "\npts",
                         textAlign: TextAlign.center,
                         style: ThemeDesign.titleStyle,
                       ),
@@ -157,26 +161,33 @@ class _ReductionDesignState extends State<ReductionDesign>{
                 ])
               ]),
           SizedBox(height: 10),
-          RaisedButton(
+          //Affiche un bouton actif si le nombre de points disponible est suffisant
+          widget.reduction.nbPoints > UserDB.nbPoints
+          ? RaisedButton(
+              child: Text("Vous n'avez pas assez de points"),
+              onPressed: null,
+          )
+          : RaisedButton(
               child: Text("Utiliser la réduction"),
               onPressed: () async {
-                //TODO: For testing
-//            try {
-//              String barcode = await BarcodeScanner.scan();
-//              setState(() => done = widget.action.validate(barcode).toString());
-//            }
-//            catch (e){
-//              setState(() => done = e.toString());
-//            }
-
-//                if (widget.reduction.qrcode == null || widget.reduction.qrcode == "")
-//                  Navigator.pushReplacement(context, MaterialPageRoute(
-//                      builder: (BuildContext context) => PhotoPage(action: widget.action)
-//                  ));
-//                else
-//                  Navigator.pushReplacement(context, MaterialPageRoute(
-//                      builder: (BuildContext context) => QrcodePage(action: widget.action)
-//                  ));
+                  //If variable QRCode doesn't exist, use UID of reduction instead
+                  String qrcode = widget.reduction.qrcode == "" || widget.reduction.qrcode == null
+                  ? widget.reduction.uid
+                  : widget.reduction.qrcode;
+                  Uint8List image = await scanner.generateBarCode(qrcode);
+                  showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                        new AlertDialog(
+                          title: new Text("QRCode pour la réduction"),
+                          content: new Image.memory(image),
+                          actions: <Widget> [
+                            new FlatButton(
+                              child: new Text("Close"),
+                              onPressed: () => Navigator.of(context).pop()
+                          )]
+                    )
+                  ).then((_) => UserDB.addPoints(-widget.reduction.nbPoints));
               }
           ),
           SizedBox(height: 30),

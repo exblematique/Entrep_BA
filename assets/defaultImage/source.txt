@@ -1,2 +1,3 @@
 action.png : https://svgsilh.com/fr/009688/image/1119165.html
 company.png : https://pixabay.com/illustrations/building-company-business-4052951/
+reduction.png : https://pixabay.com/fr/vectors/tirelire-cochon-piggy-%C3%A9conomie-158346/

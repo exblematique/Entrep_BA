@@ -4,7 +4,6 @@ import 'package:ba_locale/model/design.dart';
 import 'package:ba_locale/model/style.dart';
 import 'package:ba_locale/view/photo/photo.dart';
 import 'package:flutter/material.dart' show Alignment, AssetImage, AsyncSnapshot, BoxDecoration, BoxFit, BuildContext, Color, Column, Container, CrossAxisAlignment, DecorationImage, EdgeInsets, FutureBuilder, Icon, Icons, Image, Key, ListView, MainAxisAlignment, MaterialPageRoute, Navigator, Padding, RaisedButton, Row, Scaffold, SizedBox, SnackBar, SnackBarAction, Stack, State, StatefulWidget, Text, TextAlign, Widget, required;
-import 'package:flutter/widgets.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
 import 'package:url_launcher/url_launcher.dart';
 
