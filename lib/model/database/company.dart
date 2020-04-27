@@ -11,7 +11,8 @@ import 'package:flutter/material.dart';
 
 //Abstract class for company items
 class CompanyDB{
-  final String uid, name, description, qrcode, address, lat, long;
+  final String uid, name, description, qrcode, address;
+  final double lat, long;
   final DateTime startDate, endDate;
   final Image image;
   final int nbPoints;
