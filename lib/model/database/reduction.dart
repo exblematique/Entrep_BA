@@ -1,30 +1,30 @@
+/**
+ * This page contains interaction with the database for actions
+ * ReductionDB is a unique action
+ * ReductionsDB contains all actions available in the database
+ */
 import 'package:ba_locale/model/database/company.dart';
+import 'package:ba_locale/controller/script.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ReductionDB{
   CompanyDB company;
-  final String uid, name, description, qrcode, place;
+  final String uid, name, description, qrcode;
+  final Image image;
   final DateTime startDate, endDate;
   final int nbPoints;
 
   ReductionDB({
     @required this.uid,
-    @required this.place,
     @required this.name,
     @required this.description,
     @required this.nbPoints,
+    this.image,
     this.startDate,
     this.endDate,
     this.qrcode
   });
-
-  bool validate(String qrcode) {
-    if (qrcode == this.qrcode)
-      return true;
-    else
-      return false;
-  }
 
   Future<bool> delete() async => ReductionsDB.deleteItem(this);
 
@@ -82,7 +82,7 @@ abstract class ReductionsDB{
           startDate: reduction.data['startDate'],
           endDate: reduction.data['endDate'],
           qrcode: reduction.data['qrcode'],
-          place: reduction.data['place']  == null ? "" : reduction.data['place'],
+          image: strToImage(reduction.data['image']),
         ));
       ready = true;
     }).catchError((_){err = true;});

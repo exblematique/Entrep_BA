@@ -1,7 +1,7 @@
 import 'package:ba_locale/model/database/reduction.dart';
 import 'package:ba_locale/model/design.dart';
 import 'package:ba_locale/model/style.dart';
-import 'package:flutter/material.dart' show Alignment, AssetImage, AsyncSnapshot, BoxDecoration, BoxFit, BuildContext, Column, Container, CrossAxisAlignment, DecorationImage, EdgeInsets, FutureBuilder, Icon, Icons, Image, Key, ListView, MainAxisAlignment, Padding, RaisedButton, Row, SizedBox, Stack, State, StatefulWidget, Text, TextAlign, Widget, required;
+import 'package:flutter/material.dart' show Alignment, AssetImage, AsyncSnapshot, BoxDecoration, BoxFit, BuildContext, Color, Column, Container, CrossAxisAlignment, DecorationImage, EdgeInsets, FutureBuilder, Icon, Icons, Image, Key, ListView, MainAxisAlignment, Padding, RaisedButton, Row, SizedBox, Stack, State, StatefulWidget, Text, TextAlign, Widget, required;
 
 class ReductionPage extends StatefulWidget {
   ReductionPage({Key key}) : super(key: key);
@@ -14,9 +14,9 @@ class _ReductionPageState extends State<ReductionPage> {
   List<ReductionDesign> createDesign() {
     List<ReductionDesign> output = new List<ReductionDesign>();
     bool odd = false;
-    for (ReductionDB action in ReductionsDB.availableList) {
+    for (ReductionDB reduction in ReductionsDB.availableList) {
       output.add(ReductionDesign(
-          reduction: action,
+          reduction: reduction,
       ));
       odd = !odd;
     }
@@ -29,7 +29,7 @@ class _ReductionPageState extends State<ReductionPage> {
       future: ReductionsDB.waitToReady(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot){
         List<Widget> output = new List<Widget>();
-        output.add(TitrePageDesign("Les réductions"));
+        output.add(TitrePageDesign("Les réductions disponibles"));
         if (snapshot.hasData) {
           List<ReductionDesign> reductions = createDesign();
           for (ReductionDesign reduction in reductions)
@@ -60,41 +60,53 @@ class _ReductionDesignState extends State<ReductionDesign>{
 
   Widget build(BuildContext context) {
     return Container(
-        color: ThemeDesign.backgroundColor,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Stack(
+      color: ThemeDesign.backgroundColor,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Stack(
+            children: <Widget>[
+              Image(
+                image: AssetImage('assets/img/Bandeau_Reduction.png'),
+                height: 75,
+                width: 500000, //This value enable to fill all width of the screen
+                fit: BoxFit.fitWidth,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  Image(
-                    image: AssetImage('assets/img/Bandeau_Reduction.png'),
-                    //height: 75,
-                  ),
                   Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        Image(
-                          image: AssetImage('assets/img/logo.jpg'),
-                          height: 75,
+                    children: <Widget>[
+                      Image(
+                        image: widget.reduction.image == null ? AssetImage('assets/defaultImage/reduction.png') : widget.reduction.image.image,
+                        height: 75,
+                        width: 75,
+                        fit: BoxFit.fitHeight,
+                      ),
+                      Padding(padding: EdgeInsets.only(left: 20),
+                        child: Text(widget.reduction.name,
+                          style: ThemeDesign.titleStyle,
                         ),
-                        Padding(padding: EdgeInsets.only(left: 10),
-                          child: Text(widget.reduction.name,
-                            style: ThemeDesign.titleStyle,
-                          ),
-                        ),
-                        RaisedButton(
-                            child: Icon(Icons.arrow_drop_down),
-                            onPressed: () => setState(() => _isEnabled = !_isEnabled)
-                        )
-                      ]
-                  ),
-                ]),
-            _isEnabled ? descriptionDisplay() : Container(),
-            SizedBox(height: 10),
-          ],
-        ));
+                      ),
+                    ]),
+                  SizedBox(
+                    height: 75,
+                    width: 50,
+                    child: RaisedButton(
+                      color: Color.fromRGBO(255, 0, 0, 0),
+                      child: Icon(Icons.arrow_drop_down),
+                      onPressed: () => setState(() => _isEnabled = !_isEnabled)
+                    )
+                  )
+                ]
+              ),
+          ]),
+          _isEnabled ? descriptionDisplay() : Container(),
+          SizedBox(height: 10),
+        ],
+      ));
   }
   Widget descriptionDisplay (){
     return Column(
@@ -102,7 +114,7 @@ class _ReductionDesignState extends State<ReductionDesign>{
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           ParameterValueDesign(
-              parameter: "Réduction :",
+              parameter: "Réduction disponibles :",
               value: widget.reduction.description
           ),
           SizedBox(height: 10),
@@ -119,15 +131,18 @@ class _ReductionDesignState extends State<ReductionDesign>{
                       ),
                       ParameterValueDesign(
                           parameter: "Lieu pour utiliser la réduction :",
-                          value: widget.reduction.place
+                          value: widget.reduction.company.address
                       )
                     ]),
                 Row(children: <Widget>[
-                  Image.asset('assets/img/logo.jpg', height: 100),
+                  Image(
+                    image: widget.reduction.company.image == null ? AssetImage('assets/defaultImage/company.png') : widget.reduction.company.image.image,
+                    height: 100,
+                  ),
                   Container(
                       alignment: Alignment.center,
                       child: Text(
-                        widget.reduction.nbPoints.toString() + "\npts",
+                        "+" + widget.reduction.nbPoints.toString() + "\npts",
                         textAlign: TextAlign.center,
                         style: ThemeDesign.titleStyle,
                       ),

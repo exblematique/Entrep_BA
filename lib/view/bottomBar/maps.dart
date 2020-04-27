@@ -27,7 +27,7 @@ class MapsPageState extends State<MapsPage> {
           position: LatLng(company.lat, company.long),
           infoWindow: InfoWindow(
             title: company.name,
-            snippet: company.address,
+            snippet: company.address
           ),
         );
         _markers[company.name] = marker;

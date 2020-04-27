@@ -27,10 +27,6 @@ class ActionDB{
     this.qrcode,
   });
 
-  bool validate(String qrcode) {
-    return qrcode == this.qrcode;
-  }
-
   Future<bool> delete() async => ActionsDB.deleteItem(this);
 
   void addCompany(CompanyDB companyDB) {
@@ -48,7 +44,6 @@ abstract class ActionsDB{
   //Check if data are downloaded
   //If not, try to download and return true if successful
   static Future<bool> waitToReady() async {
-    //await CompaniesDB.waitToReady();
     if (!ready)
       await downloadData();
     return ready && !err;
