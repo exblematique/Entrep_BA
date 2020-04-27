@@ -4,7 +4,6 @@
 import 'package:ba_locale/controller/splash.dart';
 import 'package:ba_locale/model/style.dart';
 import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
 
 
 // All import to define routes
@@ -17,29 +16,17 @@ import 'package:ba_locale/view/bottomBar/maps.dart' show MapsPage;
 import 'package:ba_locale/view/drawer/manual.dart' show Manual;
 import 'package:ba_locale/view/drawer/help.dart' show HelpPage;
 
-Future<void> main() async {
-  //Enable camera:
-  WidgetsFlutterBinding.ensureInitialized();
-  final cameras = await availableCameras();
-  final firstCam = cameras.first;
-  runApp(MainApp(camera: firstCam));
-}
+void main() => runApp(MainApp());
 
 class MainApp extends StatelessWidget {
-  final CameraDescription camera;
 
   const MainApp({
     Key key,
-    @required this.camera,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     const String appTitle = 'Bienvenue sur la BA locale !';
-//    const Color _mainColor = Color(0xFF263F44);
-//    const Color _secColor = Color(0xFFFFF1CF);
-//    const Color _terColor = Color(0xFF015668);
-//    const Color _lastColor = Color(0xFFFFD369);
 
     return MaterialApp(
         title: appTitle,
