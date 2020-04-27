@@ -10,7 +10,7 @@ abstract class UserDB {
   static bool err = false;
 
   //Generic pieces of information
-  static String firstName, lastName, birthDate, email, pseudo;
+  static String uid, firstName, lastName, birthDate, email, pseudo;
   static int nbPoints;
   static List<CompanyDB> companies = new List<CompanyDB>();
   static List<ReductionDB> reductionsUsed = new List<ReductionDB>();
@@ -56,6 +56,7 @@ abstract class UserDB {
         print(e);
       });
     if (err) return;
+    uid = currentUser.uid;
     pseudo = user.data['pseudo'];
     firstName = user.data['firstName'];
     lastName = user.data['lastName'];
@@ -89,6 +90,7 @@ abstract class UserDB {
   static void clear(){
     ready = false;
     err = false;
+    uid = null;
     pseudo = null;
     firstName = null;
     lastName = null;
@@ -113,5 +115,14 @@ abstract class UserDB {
   static Future<void> signOut() async {
     await FirebaseAuth.instance.signOut()
         .then((_) => clear());
+  }
+
+  //Function to add points for the current user in Firebase
+  static Future<void> addPoints(int nbPoints) async {
+    return Firestore.instance
+        .collection("users")
+        .document(uid)
+        .updateData({"nbPoints": UserDB.nbPoints + nbPoints})
+        .then((_) => UserDB.nbPoints += nbPoints);
   }
 }

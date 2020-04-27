@@ -18,7 +18,7 @@ class _ProfilePageState extends State<ProfilePage> {
   List<Widget> createDesign() {
     List<Widget> output = new List<Widget>();
     output.add(new Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Image(

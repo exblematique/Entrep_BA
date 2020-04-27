@@ -1,11 +1,12 @@
 
 import 'package:ba_locale/model/database/action.dart';
+import 'package:ba_locale/model/database/user.dart';
 import 'package:ba_locale/model/design.dart';
 import 'package:ba_locale/model/style.dart';
 import 'package:ba_locale/view/photo/photo.dart';
-import 'package:ba_locale/view/photo/qrcode.dart';
-import 'package:flutter/material.dart' show Alignment, AssetImage, AsyncSnapshot, BoxDecoration, BoxFit, BuildContext, Color, Column, Container, CrossAxisAlignment, DecorationImage, EdgeInsets, FutureBuilder, Icon, Icons, Image, Key, ListView, MainAxisAlignment, MaterialPageRoute, Navigator, Padding, RaisedButton, Row, SizedBox, Stack, State, StatefulWidget, Text, TextAlign, Widget, required;
+import 'package:flutter/material.dart' show Alignment, AssetImage, AsyncSnapshot, BoxDecoration, BoxFit, BuildContext, Color, Column, Container, CrossAxisAlignment, DecorationImage, EdgeInsets, FutureBuilder, Icon, Icons, Image, Key, ListView, MainAxisAlignment, MaterialPageRoute, Navigator, Padding, RaisedButton, Row, Scaffold, SizedBox, SnackBar, Stack, State, StatefulWidget, Text, TextAlign, Widget, required;
 import 'package:flutter/widgets.dart';
+import 'package:qrscan/qrscan.dart' as scanner;
 
 class ActionPage extends StatefulWidget {
   ActionPage({Key key}) : super(key: key);
@@ -136,7 +137,7 @@ class _ActionDesignState extends State<ActionDesign>{
                 ),
                 ParameterValueDesign(
                   parameter: "Lieu de l'action :",
-                  value: widget.action.address == null ? widget.action.company.address : widget.action.address
+                  value: widget.action.address == null || widget.action.address == "" ? widget.action.company.address : widget.action.address
                 )
               ]),
               Row(children: <Widget>[
@@ -170,21 +171,34 @@ class _ActionDesignState extends State<ActionDesign>{
               Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context) => PhotoPage(action: widget.action)
             ))
-              //TODO: For testing
-  //            try {
-  //              String barcode = await BarcodeScanner.scan();
-  //              setState(() => done = widget.action.validate(barcode).toString());
-  //            }
-  //            catch (e){
-  //              setState(() => done = e.toString());
-  //            }
         )
+        //This button take a photo of QRCode
+        //Display a Snackbar with information about picture
         : RaisedButton(
             child: Text("Récuperer le QRCode de la bonne action"),
-            onPressed: () async =>
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (BuildContext context) => QrcodePage(action: widget.action)
-            ))
+            onPressed: () async {
+              try {
+                String qrcode = await scanner.scan();
+                if (qrcode == widget.action.qrcode) {
+                  await UserDB.addPoints(widget.action.nbPoints);
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text("Félicitation vous avez gagné " + widget.action.nbPoints.toString() + " points !!!")));
+                } else
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text("Le QRCode est incorrect...")));
+              } catch (e) {
+                if (e.code == scanner.CameraAccessDenied)
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text("Veuillez autoriser la capture de son et de prendre des photos dans les autorisations")));
+                else
+                  Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text("Il y a une erreur inconnue")));
+                }
+            }
+
+//TODO CLEAN                Navigator.push(context, MaterialPageRoute(
+//                    builder: (BuildContext context) => QrcodePage(action: widget.action)
+//            ))
         )
       ]
     );

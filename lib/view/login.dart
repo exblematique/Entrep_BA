@@ -78,8 +78,7 @@ class LoginState extends State<Login> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    SplashPage()
+                                builder: (context) => SplashPage()
                             )
                           ).catchError((err) {
                               print(err);
