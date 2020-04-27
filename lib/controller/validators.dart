@@ -1,5 +1,5 @@
 /*
- * This file contain conditiond to accept some input fields
+ * This file contain conditions to accept some input fields
  */
 
 String emailValidator(String value) {

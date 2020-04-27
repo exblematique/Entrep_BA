@@ -10,14 +10,14 @@ import 'package:flutter/material.dart';
 
 class ActionDB{
   CompanyDB company;
-  final String uid, name, description, qrcode, place;
+  final String uid, name, description, qrcode, address;
   final Image image;
   final DateTime startDate, endDate;
   final int nbPoints;
 
   ActionDB({
     @required this.uid,
-    @required this.place,
+    @required this.address,
     @required this.name,
     @required this.description,
     @required this.nbPoints,
@@ -28,10 +28,7 @@ class ActionDB{
   });
 
   bool validate(String qrcode) {
-    if (qrcode == this.qrcode)
-      return true;
-    else
-      return false;
+    return qrcode == this.qrcode;
   }
 
   Future<bool> delete() async => ActionsDB.deleteItem(this);
@@ -91,7 +88,7 @@ abstract class ActionsDB{
             startDate: action.data['startDate'],
             endDate: action.data['endDate'],
             qrcode: action.data['qrcode'],
-            place: action.data['place'] == null ? "" : action.data['place'],
+            address: action.data['place'] == null ? "" : action.data['place'],
             image: strToImage(action.data['image']),
           ));
         }

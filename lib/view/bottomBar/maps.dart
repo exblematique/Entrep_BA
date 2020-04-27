@@ -25,6 +25,7 @@ class MapsPageState extends State<MapsPage> {
       for (DocumentSnapshot partner in partners.documents) {
         final marker = Marker(
           markerId: MarkerId(partner.documentID),
+          //If action is available in company address, it doen't need using another address
           position: LatLng(partner.data['latitude'], partner.data['longitude']),
           infoWindow: InfoWindow(
             title: partner.data['name'],

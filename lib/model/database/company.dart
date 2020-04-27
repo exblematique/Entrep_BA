@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 
 //Abstract class for company items
 class CompanyDB{
-  final String uid, name, description, qrcode;
+  final String uid, name, description, qrcode, address, lat, long;
   final DateTime startDate, endDate;
   final Image image;
   final int nbPoints;
@@ -23,6 +23,9 @@ class CompanyDB{
     @required this.uid,
     @required this.name,
     @required this.description,
+    @required this.address,
+    @required this.lat,
+    @required this.long,
     @required this.actions,
     @required this.reductions,
     @required this.nbPoints,
@@ -83,7 +86,9 @@ abstract class CompaniesDB{
     if (err) return;
     companies.clear();
 
+    //Downloading all company
     for (DocumentSnapshot company in snapshot.documents) {
+      //Downloading all actions and add to company object
       List<ActionDB> actions = new List<ActionDB>();
       if (company.data['actions'] != null && company.data['actions'].isNotEmpty) {
         await ActionsDB.waitToReady();
@@ -91,6 +96,7 @@ abstract class CompaniesDB{
           actions.add(ActionsDB.getElementbyUID(action.documentID));
       }
 
+      //Downloading all reductions and add to company object
       List<ReductionDB> reductions = new List<ReductionDB>();
       if (company.data['reductions'] != null && company.data['reductions'].isNotEmpty) {
         await ReductionsDB.waitToReady();
@@ -98,10 +104,14 @@ abstract class CompaniesDB{
           reductions.add(ReductionsDB.getElementbyUID(reduction.documentID));
       }
 
+      //Creating company object
       companies.add(new CompanyDB(
         uid: company.documentID,
         name: company.data['name'],
         description: company.data['description'],
+        address: company.data['address'],
+        lat: company.data['latitude'],
+        long: company.data['longitude'],
         actions: actions,
         reductions: reductions,
         nbPoints: company.data['nbPoints'],
@@ -112,7 +122,6 @@ abstract class CompaniesDB{
       ));
     }
     ready = true;
-    //})
   }
 }
 

@@ -51,8 +51,8 @@ class _ProfilePageState extends State<ProfilePage> {
       output.add(Text("Gestion entreprise", style: ThemeDesign.titleStyle));
       for (int i = 0; i < UserDB.companies.length; i++)
         output.add(CompanyDesign(UserDB.companies[i]));
-      return output;
     }
+    return output;
   }
 
   /*

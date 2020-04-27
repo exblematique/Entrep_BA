@@ -136,7 +136,7 @@ class _ActionDesignState extends State<ActionDesign>{
                 ),
                 ParameterValueDesign(
                   parameter: "Lieu de l'action :",
-                  value: widget.action.place
+                  value: widget.action.address == null ? widget.action.company.address : widget.action.address
                 )
               ]),
               Row(children: <Widget>[
@@ -162,27 +162,29 @@ class _ActionDesignState extends State<ActionDesign>{
               ])
         ]),
         SizedBox(height: 10),
-        RaisedButton(
-          child: Text("Participer à la bonne action"),
-          onPressed: () async {
-            //TODO: For testing
-//            try {
-//              String barcode = await BarcodeScanner.scan();
-//              setState(() => done = widget.action.validate(barcode).toString());
-//            }
-//            catch (e){
-//              setState(() => done = e.toString());
-//            }
-
-            if (widget.action.qrcode == null || widget.action.qrcode == "")
+        //Change button according to need scan QRCode or take action
+        widget.action.qrcode == null || widget.action.qrcode == ""
+        ? RaisedButton(
+            child: Text("Prendre une photo de la bonne action"),
+            onPressed: () async =>
               Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context) => PhotoPage(action: widget.action)
-              ));
-            else
-              Navigator.push(context, MaterialPageRoute(
-                builder: (BuildContext context) => QrcodePage(action: widget.action)
-              ));
-          }
+            ))
+              //TODO: For testing
+  //            try {
+  //              String barcode = await BarcodeScanner.scan();
+  //              setState(() => done = widget.action.validate(barcode).toString());
+  //            }
+  //            catch (e){
+  //              setState(() => done = e.toString());
+  //            }
+        )
+        : RaisedButton(
+            child: Text("Récuperer le QRCode de la bonne action"),
+            onPressed: () async =>
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (BuildContext context) => QrcodePage(action: widget.action)
+            ))
         )
       ]
     );
