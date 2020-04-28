@@ -183,7 +183,7 @@ class _ReductionDesignState extends State<ReductionDesign>{
                           content: new Image.memory(image),
                           actions: <Widget> [
                             new FlatButton(
-                              child: new Text("Close"),
+                              child: new Text("Fermer"),
                               onPressed: () => Navigator.of(context).pop()
                           )]
                     )
