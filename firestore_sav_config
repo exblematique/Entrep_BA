@@ -4,7 +4,7 @@ service cloud.firestore {
   	/********* Functions ****************/
     //Check if the selected user is a admin
   	function isAdmin(){
-        	return request.auth.uid in get(/databases/$(database)/documents/admins).data; // && user != null;
+        	return request.auth.uid in get(/databases/$(database)/documents/admins).data;
     }
 
     //Check if the current user is authentify
@@ -19,31 +19,42 @@ service cloud.firestore {
     }
 
     //Check if the current user belongs to company
-    function isInCompany(/*company*/){
+    function isInCompany(){
     	return request.auth.uid in get(/databases/$(database)/documents/companies/$(request.resource.data.company)/managers).data;
-      //return request.auth.uid in get(/databases/$(database)/documents/companies/$(company)/managers).data;
     }
 
     //Enabled access to user collec
     match /users/{userId}{
-    	allow read, write: if isCurrentUser(userId) || isAdmin();
+    	allow create: if isCurrentUser(userId);
+    	allow read, write, delete: if isCurrentUser(userId) || isAdmin();
     }
 
     //Allow read all users for action and reduction collection
     //Allow write only if the user belongs to the company or the user is an admin
     match /actions/{action}{
       allow read: if isAuth();
-      allow write: if isInCompany(/*action.company*/) || isAdmin();
+      allow write, create, delete: if isInCompany() || isAdmin();
     }
 
     match /reductions/{reduction}{
     	allow read: if isAuth();
-      allow write: if isInCompany() || isAdmin();
+      allow write, create, delete: if isInCompany() || isAdmin();
+    }
+
+    match /companies/{company}{
+    	allow read: if isAuth();
+      allow write, create, delete: if request.auth.uid in request.resource.data.managers || isAdmin();
+    }
+
+    //Allow users to read commun documents
+    match /text/{text}{
+    	allow read: if isAuth();
+      allow write, create, delete: if isAdmin();
     }
 
     //Denying collection for all users without admin
-    match /groups{
-    	allow read, write: if isAdmin();
+    match /groups/{group}{
+    	allow read, write, create, delete: if isAdmin();
     }
-	}
+  }
 }
