@@ -22,7 +22,7 @@ class _ProfilePageState extends State<ProfilePage> {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Image(
-          image: AssetImage('assets/img/logo.jpg'),
+          image: AssetImage('assets/defaultImage/profile.png'),
           height: 75,
         ),
         Padding(padding: EdgeInsets.only(left: 10),
